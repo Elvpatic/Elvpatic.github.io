@@ -4,12 +4,43 @@
   
   
   <entry>
+    <title>moectf-wp</title>
+    <link href="/2024/11/06/moectf-wp/"/>
+    <url>/2024/11/06/moectf-wp/</url>
+    
+    <content type="html"><![CDATA[<h1 id="moectf"><a href="#moectf" class="headerlink" title="moectf"></a>moectf</h1><h2 id="web"><a href="#web" class="headerlink" title="web"></a>web</h2><h3 id="垫刀之路03"><a href="#垫刀之路03" class="headerlink" title="垫刀之路03"></a>垫刀之路03</h3><p>其实相当简单，只需要本地写一个php一句话木马之后，修改文件名为.jpg。上传后用burpsuit拦截即可。</p><p>但是由于不可抗力，我的bp一直没办法抓到post的包，所以暂时没有做出来</p><h3 id="垫刀之路04"><a href="#垫刀之路04" class="headerlink" title="垫刀之路04"></a>垫刀之路04</h3><p>说实话这题蛮莫名其妙的，直接就是一个目录穿越，访问..&#x2F;..&#x2F;..&#x2F;..&#x2F;就行了。以下是原出题人的意思</p><p>打开网页之后发现url里有 <code>?urc=</code> 再加上readme里写了本文档没有作用，所以猜测是目录穿越。。。emmm就。。。蛮莫名其妙的</p><h3 id="垫刀之路05"><a href="#垫刀之路05" class="headerlink" title="垫刀之路05"></a>垫刀之路05</h3><p>这题更是重量级，随便一个万能密码绕过就ok了</p><p><code>111 or 1=1 #</code></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-web</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>web-wp</title>
     <link href="/2024/11/04/wp/"/>
     <url>/2024/11/04/wp/</url>
     
     <content type="html"><![CDATA[<h2 id="做题狗"><a href="#做题狗" class="headerlink" title="做题狗"></a>做题狗</h2><p>正在学习web漏洞，感觉以后还是web层面的漏洞更多一些</p><p>学习链接：<a href="https://github.com/hongriSec/Web-Security-Attack.git">https://github.com/hongriSec/Web-Security-Attack.git</a></p><p>以后不定期更新各种web题的wp(希望日更一道web,一道re)。。。</p>]]></content>
     
+    
+    <categories>
+      
+      <category>ctf</category>
+      
+    </categories>
     
     
     <tags>
