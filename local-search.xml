@@ -4,11 +4,36 @@
   
   
   <entry>
+    <title>哈夫曼的一点点理解</title>
+    <link href="/2024/12/14/%E5%93%88%E5%A4%AB%E6%9B%BC%E7%9A%84%E4%B8%80%E7%82%B9%E7%82%B9%E7%90%86%E8%A7%A3/"/>
+    <url>/2024/12/14/%E5%93%88%E5%A4%AB%E6%9B%BC%E7%9A%84%E4%B8%80%E7%82%B9%E7%82%B9%E7%90%86%E8%A7%A3/</url>
+    
+    <content type="html"><![CDATA[<p>最近期末考，开始复习数据结构，后期等有时间在系统学习吧</p><h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><h2 id="哈夫曼树"><a href="#哈夫曼树" class="headerlink" title="哈夫曼树"></a>哈夫曼树</h2><h3 id="关于哈夫曼算法为什么是最小加权树"><a href="#关于哈夫曼算法为什么是最小加权树" class="headerlink" title="关于哈夫曼算法为什么是最小加权树"></a>关于哈夫曼算法为什么是最小加权树</h3><p>哈夫曼算法的核心在于<strong>越大的权应该离根节点越近</strong>，基于此，哈夫曼算法主要分为以下几个步骤</p><ol><li>将给定权值集合中的每个数据都作为一棵树的根结点</li><li>将最小的两个结点合并，权相加的和作为新的根结点，习惯上通常将较小的结点作为左子树</li><li>知道仅有一个根结点，即权值集合都已转为一棵二叉树的叶结点，否则重复第二条</li></ol><p>而为什么这样就可以做到让加权路径长度最小呢？</p><p>我们先把全职集合转化的二叉树叫做最终二叉树，便于下面叙述</p><p>首先，该算法将最小的两个结点结合，这就保证了离最终二叉树根结点最远的叶结点的权值最小，根据加权路径长度等于权值乘路径可知，这样使路径最长的结点的权最小，故乘积最小，同理，因为选最小的结点相加，权值较大的结点的层级就越高，就越靠近根结点，使得权值越大，路径就端</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>cs-学习</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>计算机网络学习</title>
     <link href="/2024/11/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/"/>
     <url>/2024/11/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/</url>
     
-    <content type="html"><![CDATA[<p>做项目涉及到好多计网的知识，但是系统学习的话实在是太浪费时间了</p><p>只能边做边学，不定期更新各种计网学习知识。。。。（学习过于碎片化导致没有办法很系统的记笔记。。sorry啦~)</p><p>先贴上学习链接</p><p><a href="https://github.com/SSHeRun/CS-Xmind-Note.git">https://github.com/SSHeRun/CS-Xmind-Note.git</a></p><p>然后会慢慢放上自己的理解，有时间再整理笔记</p><h2 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h2><p><a href="https://zh.wikipedia.org/wiki/%E8%B7%AF%E7%94%B1#">https://zh.wikipedia.org/wiki/%E8%B7%AF%E7%94%B1#</a></p><p><strong>路由</strong>（<strong>routing</strong>）是任何网络中选取路径的程序，在此”程序”是指一组在电脑中执行的程序。电脑网络由称为节点的许多机器(例如电脑)以及连线至这些节点的路径或链接所组成。网络中相互连接的两个节点之间的通信可以透过许多不同的路径进行。路由是使用一些预定规则选取最佳路径的程序。</p><p>简单来说，可以把路由想象成一个动词，是节点之间通信选择的过程</p><h2 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h2><p><a href="https://topvpntool.github.io/hide-ip/#%E9%BB%91%E5%AE%A2%E6%98%AF%E6%80%8E%E6%A0%B7%E9%9A%90%E8%97%8F%E4%BB%96%E4%BB%AC%E7%9A%84-ip-%E5%9C%B0%E5%9D%80">https://topvpntool.github.io/hide-ip/#%E9%BB%91%E5%AE%A2%E6%98%AF%E6%80%8E%E6%A0%B7%E9%9A%90%E8%97%8F%E4%BB%96%E4%BB%AC%E7%9A%84-ip-%E5%9C%B0%E5%9D%80</a></p><p>因为过于菜，所以每次更新都是上网上看大佬的链接然后把他们搬过来学习。。。</p><h2 id="关于代理的一些事"><a href="#关于代理的一些事" class="headerlink" title="关于代理的一些事"></a>关于代理的一些事</h2><h3 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h3><p>中转服务器，介于用户端与数据服务器之间，提高用户查找数据的效率。。。</p><p>网络上有很多平台，比如知乎，b站，当你在这些平台上访问数据时，实际在互联网中会经过如下操作</p><ul><li>用户端向平台存储服务器发送获取请求</li><li>请求通过网络中的路由器，一步一步到达目标服务器</li><li>服务器接受请求之后同样得路发送你想获取数据</li></ul><p>这就存在一个问题，如果你距离服务器得距离过于远，请求需要经过得路由器就会越多，换句话说，他在网络中走过的距离就会越长，延迟就会越高</p><p>所以，cdn起到了驿站的作用，请求时，会先向cdn发送请求，如果有需要的数据就会直接发回，如果没有就会向上一级服务器请求，由此大大减小了所需时间</p><p><img src="/.io//blog/blog/picture/148231357a1c098c61ae3cadd43c96e3.jpeg" alt="img"></p><h3 id="代理服务器"><a href="#代理服务器" class="headerlink" title="代理服务器"></a>代理服务器</h3><p>将连接到代理服务器的用户端打包，与公网隔绝，用户端任何与公网的交互都有代理服务器进行，不需要用户端自身连入公网。</p><p>由于其不需要用户端连入公网，所以经常用来翻墙(小朋友不要学习)，其原理与上述内容一致。</p><ul><li>用户端向距离较远的服务器**(防止被谈话得说法，大家懂得都懂。。。。)**发送请求时，请求会被墙拦截，墙本质上也是一个大型服务器，你向境外服务器请求时，会先经过墙</li><li>当你连入代理服务器时，你的请求不会经过墙，而是你自己配置的代理服务器，所以可以访问</li></ul><p><img src="/.io//blog/blog/picture/e5ff2d88cfc341e0693d2294b6532c81.jpeg" alt="在这里插入图片描述"></p><h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><p>与代理服务器不只是名字相似，其原理同样相似。如果说代理服务器是用户端的代理，那反向代理就是服务器的代理，因原理与上述一直，就不过多叙述了</p><p><img src="/.io//blog/blog/picture/b94b6cda68742af5a087e7ea5d83ba49.jpeg" alt="在这里插入图片描述"></p>]]></content>
+    <content type="html"><![CDATA[<p>做项目涉及到好多计网的知识，但是系统学习的话实在是太浪费时间了</p><p>只能边做边学，不定期更新各种计网学习知识。。。。（学习过于碎片化导致没有办法很系统的记笔记。。sorry啦~)</p><p>先贴上学习链接</p><p><a href="https://github.com/SSHeRun/CS-Xmind-Note.git">https://github.com/SSHeRun/CS-Xmind-Note.git</a></p><p>然后会慢慢放上自己的理解，有时间再整理笔记</p><h2 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h2><p><a href="https://zh.wikipedia.org/wiki/%E8%B7%AF%E7%94%B1#">https://zh.wikipedia.org/wiki/%E8%B7%AF%E7%94%B1#</a></p><p><strong>路由</strong>（<strong>routing</strong>）是任何网络中选取路径的程序，在此”程序”是指一组在电脑中执行的程序。电脑网络由称为节点的许多机器(例如电脑)以及连线至这些节点的路径或链接所组成。网络中相互连接的两个节点之间的通信可以透过许多不同的路径进行。路由是使用一些预定规则选取最佳路径的程序。</p><p>简单来说，可以把路由想象成一个动词，是节点之间通信选择的过程</p><h2 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h2><p><a href="https://topvpntool.github.io/hide-ip/#%E9%BB%91%E5%AE%A2%E6%98%AF%E6%80%8E%E6%A0%B7%E9%9A%90%E8%97%8F%E4%BB%96%E4%BB%AC%E7%9A%84-ip-%E5%9C%B0%E5%9D%80">https://topvpntool.github.io/hide-ip/#%E9%BB%91%E5%AE%A2%E6%98%AF%E6%80%8E%E6%A0%B7%E9%9A%90%E8%97%8F%E4%BB%96%E4%BB%AC%E7%9A%84-ip-%E5%9C%B0%E5%9D%80</a></p><p>因为过于菜，所以每次更新都是上网上看大佬的链接然后把他们搬过来学习。。。</p><h2 id="关于代理的一些事"><a href="#关于代理的一些事" class="headerlink" title="关于代理的一些事"></a>关于代理的一些事</h2><h3 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h3><p>中转服务器，介于用户端与数据服务器之间，提高用户查找数据的效率。。。</p><p>网络上有很多平台，比如知乎，b站，当你在这些平台上访问数据时，实际在互联网中会经过如下操作</p><ul><li>用户端向平台存储服务器发送获取请求</li><li>请求通过网络中的路由器，一步一步到达目标服务器</li><li>服务器接受请求之后同样得路发送你想获取数据</li></ul><p>这就存在一个问题，如果你距离服务器得距离过于远，请求需要经过得路由器就会越多，换句话说，他在网络中走过的距离就会越长，延迟就会越高</p><p>所以，cdn起到了驿站的作用，请求时，会先向cdn发送请求，如果有需要的数据就会直接发回，如果没有就会向上一级服务器请求，由此大大减小了所需时间</p><p><img src="/.io//blog/blog/picture/148231357a1c098c61ae3cadd43c96e3.jpeg" alt="img"></p><h3 id="代理服务器"><a href="#代理服务器" class="headerlink" title="代理服务器"></a>代理服务器</h3><p>将连接到代理服务器的用户端打包，与公网隔绝，用户端任何与公网的交互都有代理服务器进行，不需要用户端自身连入公网。</p><p>由于其不需要用户端连入公网，所以经常用来翻墙(小朋友不要学习)，其原理与上述内容一致。</p><ul><li>用户端向距离较远的服务器**(防止被谈话得说法，大家懂得都懂。。。。)**发送请求时，请求会被墙拦截，墙本质上也是一个大型服务器，你向境外服务器请求时，会先经过墙</li><li>当你连入代理服务器时，你的请求不会经过墙，而是你自己配置的代理服务器，所以可以访问</li></ul><p><img src="/.io//blog/blog/picture/e5ff2d88cfc341e0693d2294b6532c81.jpeg" alt="在这里插入图片描述"></p><h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><p>与代理服务器不只是名字相似，其原理同样相似。如果说代理服务器是用户端的代理，那反向代理就是服务器的代理，因原理与上述一直，就不过多叙述了</p><p><img src="/.io//blog/blog/picture/b94b6cda68742af5a087e7ea5d83ba49.jpeg" alt="在这里插入图片描述"></p><h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><p>大型电话本，用于根据域名查询ip地址</p>]]></content>
     
     
     <categories>
