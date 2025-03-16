@@ -1,0 +1,1186 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="cl0ud">
+  <meta name="keywords" content="blog,cl0ud,cs">
+  
+    <meta name="description" content="浮点数的表示形式N &#x3D; ( − 1 )^S × M × R^E  S：浮点数的符号M：一个二进制定点小数，称为尾数（mantissa），一般用定点原码小数表示E：一个二进制定点整数，称为阶码或指数，用移码表示R：基数（隐含），可约定为2、4、16等 第一章引言计算机技术的进步几乎用想着社会的方方面面。硬件的进步是的程序员能够创造除奇妙有用的软件，进而证明了为什么计算机无处不在。现在的科学幻想往往">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计组">
+<meta property="og:url" content="https://elvpatic.github.io/2025/02/19/%E8%AE%A1%E7%BB%84/index.html">
+<meta property="og:site_name" content="cl0ud&#39;s blog">
+<meta property="og:description" content="浮点数的表示形式N &#x3D; ( − 1 )^S × M × R^E  S：浮点数的符号M：一个二进制定点小数，称为尾数（mantissa），一般用定点原码小数表示E：一个二进制定点整数，称为阶码或指数，用移码表示R：基数（隐含），可约定为2、4、16等 第一章引言计算机技术的进步几乎用想着社会的方方面面。硬件的进步是的程序员能够创造除奇妙有用的软件，进而证明了为什么计算机无处不在。现在的科学幻想往往">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://elvpatic.github.io/.io//blog/blog/picture/float-point02.png">
+<meta property="article:published_time" content="2025-02-19T05:34:16.000Z">
+<meta property="article:modified_time" content="2025-03-06T13:58:06.254Z">
+<meta property="article:author" content="cl0ud">
+<meta property="article:tag" content="cs-学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://elvpatic.github.io/.io//blog/blog/picture/float-point02.png">
+  
+  
+  
+  <title>计组 - cl0ud&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"elvpatic.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-11-03T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>cl0ud</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="计组"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-19 13:34" pubdate>
+          2025年2月19日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">计组</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><img src="/.io//blog/blog/picture/float-point02.png" srcset="/img/loading.gif" lazyload alt="float-point02"></p>
+<p>浮点数的表示形式<br><code>N = ( − 1 )^S × M × R^E </code></p>
+<p>S：浮点数的符号<br>M：一个二进制定点小数，称为尾数（mantissa），一般用定点原码小数表示<br>E：一个二进制定点整数，称为阶码或指数，用移码表示<br>R：基数（隐含），可约定为2、4、16等</p>
+<h1 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>计算机技术的进步几乎用想着社会的方方面面。硬件的进步是的程序员能够创造除奇妙有用的软件，进而证明了为什么计算机无处不在。现在的科学幻想往往预示着未来最具影响力的应用。</p>
+<h3 id="传统计算应用分类及其特点"><a href="#传统计算应用分类及其特点" class="headerlink" title="传统计算应用分类及其特点"></a>传统计算应用分类及其特点</h3><p><strong>个人计算机</strong>：PC机，家家户户都在用的电脑</p>
+<p><strong>服务器</strong>：用于为多个用户并行运行大型程序的计算机，通常只能通过网络访问。</p>
+<p><strong>超级计算机</strong>：具有最好的性能和成本的一类计算机，一般被配置为服务器且通常耗费数千万美元甚至数亿美元。</p>
+<p><strong>嵌入式计算机</strong>：用于运行某预定应用程序或软件集合的计算机，一般内嵌于其他设备中。</p>
+<h3 id="欢迎来到后PC时代"><a href="#欢迎来到后PC时代" class="headerlink" title="欢迎来到后PC时代"></a>欢迎来到后PC时代</h3><p>技术的持续进步给计算机硬件带来了技术性的代际变迁，个人移动设备盛行。</p>
+<p><strong>云计算</strong>：接替了传统服务器，它依赖于现在称为仓储级计算机的巨型数据中心。像亚马逊和谷歌这样的公司构建包含了100000台服务器的仓储级计算机，一些公司租用其中的一小部分为个人移动设备提供软件服务而无需建立自己的仓储级计算机。事实上，通过云计算实现的<strong>软件即服务</strong>正在彻底改变软件行业。当今的软件开发人员经常会将应用的一部分运行在个人移动设备上，另一部分则部署在云上。</p>
+<h3 id="能从本书中学到什么"><a href="#能从本书中学到什么" class="headerlink" title="能从本书中学到什么"></a>能从本书中学到什么</h3><p>我们在解读这个革命性的计算机器中的内容，并阐明程序之下的软件以及机箱覆盖下的硬件是如何工作的。并以此为基础提升程序的性能。</p>
+<h2 id="计算机体系结构中的8个伟大思想"><a href="#计算机体系结构中的8个伟大思想" class="headerlink" title="计算机体系结构中的8个伟大思想"></a>计算机体系结构中的8个伟大思想</h2><h3 id="一、面向摩尔定律的设计"><a href="#一、面向摩尔定律的设计" class="headerlink" title="一、面向摩尔定律的设计"></a>一、面向摩尔定律的设计</h3><p>单芯片上所继承的晶体管资源每18和24个月翻一番。</p>
+<h3 id="二、使用抽象简化设计"><a href="#二、使用抽象简化设计" class="headerlink" title="二、使用抽象简化设计"></a>二、使用抽象简化设计</h3><p>使用抽象来表示不同的设计层次，隐藏底层细节以提供给高层一个更简单的模型。</p>
+<h3 id="三、加速经常性事件"><a href="#三、加速经常性事件" class="headerlink" title="三、加速经常性事件"></a>三、加速经常性事件</h3><p>比优化罕见情形能够更好的提升性能。但是需要通过仔细地实验和测量才可能得出什么是常识性事件</p>
+<h3 id="四、通过并行提高性能"><a href="#四、通过并行提高性能" class="headerlink" title="四、通过并行提高性能"></a>四、通过并行提高性能</h3><p>通过并行计算操作来获得更高性能</p>
+<h3 id="五、通过流水线提高性能"><a href="#五、通过流水线提高性能" class="headerlink" title="五、通过流水线提高性能"></a>五、通过流水线提高性能</h3><p>并行性的一种页数场景在计算机体系结构中非常普遍，他有着专有名称–<strong>流水线</strong>。</p>
+<h3 id="六、通过预测提高性能"><a href="#六、通过预测提高性能" class="headerlink" title="六、通过预测提高性能"></a>六、通过预测提高性能</h3><p>假设从预测错误中恢复的代价并不高，且预测相对准确，则平均来说进行预测并开始工作可能会比等到明确结果后再执行更快</p>
+<h3 id="七、存储层次"><a href="#七、存储层次" class="headerlink" title="七、存储层次"></a>七、存储层次</h3><p>存储器的速度通常会影响性能，存储器的容量限制了可被解决问题的规模，且当今的内存成本常常是计算机成本的主要部分，因此程序员希望存储器速度更快，容量更大，价格更便宜。结构师发现可以通过<strong>存储层次</strong>来处理这些冲突的需求。在存储层次中，速度最快容量最小并且每位价格最贵的存储器处于顶层，而速度最慢容量最大且每位价格最便宜的存储器处于底层。高速缓存给了程序员这样的错觉：主存与存储层次顶层几乎一样快，且与存储层次底层拥有几乎一样大的容量和便宜的价格。</p>
+<h3 id="八、通过冗余提高可能性"><a href="#八、通过冗余提高可能性" class="headerlink" title="八、通过冗余提高可能性"></a>八、通过冗余提高可能性</h3><p>计算机不仅要速度快，更需要工作可靠。由于任何物理设备都可能发生故障，因此我们必须引入冗余组件来使系统可靠，该组件在系统发生故障时可以替代失效组件并帮助检测故障。</p>
+<h2 id="程序表象之下"><a href="#程序表象之下" class="headerlink" title="程序表象之下"></a>程序表象之下</h2><p>一个典型的应用程序，如字处理程序或大型数据库系统，可以有数百万行代码构成，并依靠软件库来实现异常复杂的功能。众所周知，计算机的硬件只能执行极为简单的低级指令。从复杂的应用程序到原始的指令涉及若干软件层次来将高层次操作解释或翻译成简单的计算机指令，这可以作为伟大的<strong>抽象</strong>思想的一个例子。</p>
+<p>系统软件有很多种，其中有两种对于现代计算机系统来说是必须的：操作系统和编译器。</p>
+<p><strong>操作系统</strong>是用户程序和硬件之间的接口，为用户提供各种服务和监控功能。作用为</p>
+<ul>
+<li>处理输入输出操作</li>
+<li>分配内存外存</li>
+<li>为多个应用程序提供共享计算机资源的服务</li>
+</ul>
+<p><strong>编译器</strong>将高级语言编译成硬件能执行的指令。</p>
+<h3 id="从高级语言到硬件语言"><a href="#从高级语言到硬件语言" class="headerlink" title="从高级语言到硬件语言"></a>从高级语言到硬件语言</h3><p>计算机中的字符只有0和1，每一个字符都是一个<strong>二进制位</strong>或一个<strong>位</strong>（bit）。计算机能够执行指令，指令能被计算机识别并且执行的位串，可以将其视为数字。如：1001010100101110该数据串告诉计算机将两个数相加。</p>
+<p>第一代程序员直接使用二进制数与计算机通信，这非常困难，于是他们发明了助记符，用助记符写好程序之后需要编译成二进制程序，程序人员开发了能够自动编译汇编程序的<strong>汇编器</strong>。这种结合助记符的语言就是<strong>汇编语言</strong>，而那些能被计算机理解的数字叫做<strong>机器语言</strong>。</p>
+<p>尽管汇编语言为编程提供了便利，但是仍然和人类思维的语言不一样，汇编的机制要求程序员向计算机一样思考，于是程序员在汇编的基础上抽象出了高级编程语言，并写了相应的编译器将高级语言编译成汇编语言，汇编器在编译成机器语言。</p>
+<h2 id="箱盖后的硬件"><a href="#箱盖后的硬件" class="headerlink" title="&#x3D;&#x3D;箱盖后的硬件&#x3D;&#x3D;"></a>&#x3D;&#x3D;箱盖后的硬件&#x3D;&#x3D;</h2><p>这是本书第一个需要重点记忆的知识点，即计算机是由输入，输出，处理和存储数据任务的5个部件。 输入为计算机提供证据，输出将计算结果送给用户。</p>
+<h3 id="显示器"><a href="#显示器" class="headerlink" title="显示器"></a>显示器</h3><p>大多数个人移动设备都用液晶显示（LCD），今天的大多数LCD采用<strong>动态矩阵显示技术</strong>。</p>
+<h3 id="触摸屏"><a href="#触摸屏" class="headerlink" title="触摸屏"></a>触摸屏</h3><p>后PC时代的平板电脑和智能手机使用接触敏感的设备替代了鼠标键盘，使其拥有良好的用户界面。</p>
+<h3 id="打开机箱"><a href="#打开机箱" class="headerlink" title="打开机箱"></a>打开机箱</h3><p><strong>集成电路</strong>：俗称芯片，一种结合了几十个甚至上亿个晶体管的设备。</p>
+<p><strong>中央处理单元</strong>：也成为处理器，处理器是计算机中最活跃的部分，包括数据通路和控制器，能完成数据相加，数据测试，按结果发出控制信号使I&#x2F;O设备做出动作等操作。</p>
+<p><strong>数据通路</strong>：处理器中执行算术操作的部分。</p>
+<p><strong>控制器</strong>：处理器中根据程序的指令只会数据通路、存储器和I&#x2F;O设备的部分。</p>
+<p><strong>内存</strong>：程序运行时的存储空间，同时还存储程序运行时所需的数据。</p>
+<p><strong>DRAM</strong>：动态随机访问存储器，集成电路形式的存储器，可随机访问任何地址的内存。在2012年，其访问时间大约是50ms，每GB的价格为5~10美元。</p>
+<p><strong>高速缓存</strong>：高速缓存是一种小而快的存储器，一般作为大而慢的存储器的缓冲。</p>
+<p><strong>静态随机访问存储器</strong>：另一种集成电路形式的存储器，但是比DRAM更快，集成度更低。</p>
+<p><strong>指令系统体系结构</strong>：也叫体系结构，是低层次软件和硬件之间的抽象接口，包含了需要编写正确运行的机器语言程序所需要的全部信息，包括指令，寄存器，存储器访问和I&#x2F;O等。</p>
+<p><strong>应用二进制接口</strong>：用户部分的指令加上应用程序员调用的操作系统接口，定义了二进制层次可移植的计算机的标准。</p>
+<p><strong>实现</strong>：遵循体系结构抽象的硬件。</p>
+<h3 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h3><p><strong>易失性存储</strong>：类似DRAM的存储器，仅在加电时保存数据。</p>
+<p><strong>非易失性存储</strong>：在掉电时仍可保持数据的存储器，用于存储需运行的程序，例如DVD。</p>
+<p><strong>主存储</strong>：也叫主要存储。这种存储用来保持运行中的程序，在现代计算机中一般由DRAM组成。</p>
+<p><strong>辅助存储</strong>：非易失性存储，用来保存两次运行之间的程序和数据。在个人移动设备中一般由闪存组成，在服务器中有磁盘组成.</p>
+<p><strong>磁盘</strong>：也叫硬盘，是使用磁介质材料构成的以旋转盘片为基础的非易失性二级存储设备。因为是旋转的机械设备，所依磁盘的访问时间大约是5~20毫秒。</p>
+<p><strong>闪存</strong>：一种非易失性半导体内存，单位价格和速度低于DRAM，但单位价格比磁盘高，速度比磁盘块。其访问时间大约为5~50毫秒.</p>
+<h3 id="与其他计算机通信"><a href="#与其他计算机通信" class="headerlink" title="与其他计算机通信"></a>与其他计算机通信</h3><p>通过网络，计算机可与其他的计算机通信，从而拓展计算能力。联网计算机有几个优点。</p>
+<ul>
+<li>通信：信息可在计算机之间高速转换</li>
+<li>资源共享：I&#x2F;O设备可以通过网络共享，不必每台计算机都配享。</li>
+<li>远距离访问：用户无需再要使用的计算机旁，可远距离连接计算机。</li>
+</ul>
+<p><strong>局域网</strong>：一种用于在一定地理区域内传输数据的网络。</p>
+<p><strong>广域网</strong>：一种可以跨越大陆数百公里的网络。</p>
+<h2 id="处理器和存储制造技术"><a href="#处理器和存储制造技术" class="headerlink" title="处理器和存储制造技术"></a>处理器和存储制造技术</h2><p><strong>晶体管</strong>是一种受电流控制的开关。集成电路事由成千上万个晶体管组成的芯片。集成电路的制造是从硅锭开始的。</p>
+<p><strong>晶圆</strong>：由硅锭经切片机切成厚度不超过0.1英寸的硅锭切片，用于制造芯片。</p>
+<p><strong>缺陷</strong>：晶圆或者曝光成像过程中的一个微小的瑕疵，镜片可能因为包含这个缺陷而失败。</p>
+<p>缺陷的存在使得制成一个完美的晶圆是不可能的，为解决这一问题，将许多独立组件放置在某一晶圆上，然后再曝光成像后切割为晶片。</p>
+<p><strong>晶片</strong>：从晶圆中切割出来的一个单独的矩形区域，非正式的名称是芯片。</p>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><h3 id="性能的定义"><a href="#性能的定义" class="headerlink" title="性能的定义"></a>性能的定义</h3><p>不同的计算机，衡量性能的因素有很多，个人计算机用户会对降低<strong>响应时间</strong>感兴趣。</p>
+<p><strong>响应时间</strong>：也叫执行时间，是计算机完成某任务所需的总时间，包括硬盘访问，内存访问I&#x2F;O活动，操作系统开销和CPU执行时间等。</p>
+<p>而数据中心的管理者更感兴趣的常常是提高<strong>吞吐率</strong>或者<strong>带宽</strong>。</p>
+<p><strong>带宽</strong>：也叫吞吐率，性能的另外一个度量参数，表示单位时间内完成的任务数量。</p>
+<p>当任务量过大时，吞吐量大也会导致响应时间变短。当我们想说提高性能时，一般说<strong>增加性能</strong>和<strong>减少执行时间</strong></p>
+<h3 id="性能的度量"><a href="#性能的度量" class="headerlink" title="性能的度量"></a>性能的度量</h3><p>时间是计算机性能的衡量标准，完成同样的计算任务，需要时间最少的计算机是最快的。程序的执行时间一般是以秒为单位。</p>
+<p><strong>CPU执行时间</strong>：简称为CPU时间，执行某一任务在CPU上所花费的时间。</p>
+<p><strong>用户CPU时间</strong>：程序本身所花费的CPU时间。</p>
+<p><strong>系统CPU时间</strong>：为执行程序而花费在操作系统上的时间。</p>
+<p>我们使用<strong>系统性能</strong>表示空载系统的响应时间。用术语<strong>CPU性能</strong>表示用户CPU时间。几乎所有的计算机的构建都需要基于时钟，该时钟确定各类时间在硬件中何时发生。这些离散时间间隔被称为时钟周期数，每个时钟周期的长度称为<strong>周期长度</strong>。</p>
+<h3 id="CPU性能机器度量因素"><a href="#CPU性能机器度量因素" class="headerlink" title="CPU性能机器度量因素"></a>CPU性能机器度量因素</h3><p>性能度量的基本指标是CPU执行时间。</p>
+<p>CPU执行时间&#x3D;CPU时钟周期数*时钟周期长度</p>
+<p>CPU执行时间&#x3D;CPU时钟周期数&#x2F;时钟频率</p>
+<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p><strong>指令平均时钟周期数</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。简称<strong>CPI</strong></p>
+<p>CPU时钟周期数&#x3D;程序的指令数* CPI *时钟周期长度</p>
+<p>CPU时间&#x3D;指令数*CPI&#x2F;时钟频率</p>
+<h3 id="经典的CPU性能公式"><a href="#经典的CPU性能公式" class="headerlink" title="经典的CPU性能公式"></a>经典的CPU性能公式</h3><p>CPU时间&#x3D;指令数*CPI *时钟周期长度</p>
+<p>CPU时间&#x3D;指令数* CPI&#x2F;时钟频率</p>
+<h2 id="功耗墙"><a href="#功耗墙" class="headerlink" title="功耗墙"></a>功耗墙</h2><p>近几年，Intel处理器的性能增长速度有所缓和，放缓的原因是功率已经达到了实际极限，无法将普通商用处理器冷却下来。</p>
+<p>后PC时代电池寿命比性能更加关键。对于百万级服务器的仓储式计算机来说，冷却费用非常之高，因此必须降低冷却成本。对于计算机来说，用焦耳每秒这样的能耗单位比瓦这样的功率单位更能直观的体现出计算机所消耗能量的多少。</p>
+<p>集成电路技术中每个晶体管需要的功耗是一次反转需要的能耗和开关频率的乘积：</p>
+<p>功耗正比于负载电容*电压^2 *开关频率 *0.5</p>
+<h2 id="从单处理器向多处理器转变"><a href="#从单处理器向多处理器转变" class="headerlink" title="从单处理器向多处理器转变"></a>从单处理器向多处理器转变</h2><p>功耗的极限迫使微处理器的设计发生了巨变。很多公司在单个微处理器芯片中加入了多个核（为避免混淆，将处理器称作核）这种微处理器称作多核处理器。</p>
+<p>单核处理器时代，程序员可以不修改代码而是将依赖于硬件，体系结构和编译器的创新就能够实现程序的性能翻倍，但是到了多核处理器时代，程序员必须修改代码以便利用多核的优势，才能够实现性能上的提升。</p>
+<p>为了强调软件系统和硬件系统的协同工作，我们在本书中用“硬件&#x2F;软件接口”的概念来进行描述，介绍了一些重要的观点：</p>
+<p>并行性对计算性能一直十分重要，通过指令重叠执行使程序运行的更快，在抽取了硬件的并行本质之后，程序员或编译器可认为在硬件中指令是串行执行的。但是程序员编写显示并行程序是十分困难的。</p>
+<ul>
+<li>原因一：并行编程以提高性能为目的，这必然增加编程的难度。不仅程序必须要正确，能够解决重要问题，而且运行速度要快，还需要为用户或其他程序员提供接口以便使用。如果不关心性能的话，编写一个串行程序就足够了。</li>
+<li>原因二：为了发挥并行硬件的速度，程序员必须要将应用划分为每个核上大致相同数量的任务，并同时完成。该要尽可能减少调度的开销，不浪费并行性能。</li>
+</ul>
+<h2 id="谬误与陷阱"><a href="#谬误与陷阱" class="headerlink" title="谬误与陷阱"></a>谬误与陷阱</h2><p><strong>陷阱：在改进计算机的某个方向时期望总性能的提高与改进大小成正比</strong></p>
+<p><strong>谬误：低利用率的计算机有着更低的功耗</strong></p>
+<p><strong>谬误：面向性能的设计和面向能效的设计具有不相关的目标</strong></p>
+<p>在优化架构时，即使优化后的部分需要比之前更多的能量，计算机的能耗还是减小了，这是因为优化后能够减少运行时间，所以从总体上看，能耗还是减小的。</p>
+<p><strong>陷阱：用性能公式的一个字集去度量性能</strong></p>
+<p>有一种取代时间以度量性能的尺度是每秒百万条指令数MIPS</p>
+<p>MIPS&#x3D;指令数&#x2F;(执行时间*10^6)</p>
+<p>MIPS&#x3D;时钟频率&#x2F;(CPI*10^6)</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>硬件和软件设计者都采用分层的方法构建计算机系统，每个下层都对其上层隐藏本层的细节。<strong>抽象思想</strong>是理解当今计算机系统的基础。也许最重要的抽象层次是硬件和底层软件之间的接口，成为<strong>指令系统体系结构</strong>保持指令系统体系结构恒定，是的机遇该指令系统体系结构的不同硬件实现能够运行相同的软件。这种方法的一个可能不足是，会阻止某些需要修改该接口的创新。</p>
+<h1 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h1><h2 id="引言-1"><a href="#引言-1" class="headerlink" title="引言"></a>引言</h2><p>人和人谈话需要说对方能够听懂的语言，和计算机谈话也如此，想要让计算机执行相应的命令，就要说计算机的语言，即为<strong>指令</strong>，本章目的在于讲述一个遵循硬件简单性的指令系统，同时给出计算机结构的基本原理</p>
+<h2 id="计算机硬件的操作"><a href="#计算机硬件的操作" class="headerlink" title="计算机硬件的操作"></a>计算机硬件的操作</h2><p>每台计算机必须能够实现算术运算</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">add</span> <span class="hljs-selector-tag">a</span>,<span class="hljs-selector-tag">b</span>,<span class="hljs-selector-tag">c</span>   <span class="hljs-comment">//a=b+c</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注</strong>：RISC-V指令集每行只能包含一条指令</p>
+<p>加法要求每条指令恰好有三个操作数，不能多也不能少，符合硬件简单原则：<strong>操作固定数量的硬件比可变数量的硬件更简单</strong>，由此我们可见硬件设计的三条基本原则：</p>
+<p><strong>原则1：简单源于规整</strong></p>
+<h2 id="计算机硬件的操作数"><a href="#计算机硬件的操作数" class="headerlink" title="计算机硬件的操作数"></a>计算机硬件的操作数</h2><p>不同于高级语言，算术指令的操作数会受到限制：他们必须曲子寄存器。到那时寄存器依赖于硬件（数量有限）。在RISC-V体系中，寄存器的大小为64位。在计算机中访问的基本单位有两种</p>
+<ul>
+<li><strong>双字</strong>：64位一组</li>
+<li><strong>字</strong>：32位一组</li>
+</ul>
+<p>RISC-V架构下的寄存器有32个，其原因可以在硬件设计第二个原则上找到</p>
+<p><strong>原则2：更少就更快</strong></p>
+<p>更少的寄存器意味着更短的时钟周期，处理速度就会更快。因为电信号传播越远距离，所花时间就越长。但是这并不是绝对的，31个寄存器并不会比32个更快，之所以这么设计式设计人员对于更多寄存器和更短的时钟周期之间做出的选择。同时，指令格式的位数限制，也是寄存器的数量不能超过32个。</p>
+<h3 id="存储器操作数"><a href="#存储器操作数" class="headerlink" title="存储器操作数"></a>存储器操作数</h3><p>计算机利用内存存储数组和结构体这种巨大的数据结构，但是指令只能作用于寄存器中，所以想访问内存中的数据，就需要有在内存和寄存器之间传输数据的指令，<strong>数据传输指令</strong>。指令必须提供内存地址。内存是一个大型的以为数组，其地址作为数组下标，从零开始。RISC-V使用字节寻址，每个双字代表8个字节。</p>
+<p>载入指令是<strong>ld（load）</strong></p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs llvm">ld <span class="hljs-keyword">x</span><span class="hljs-number">9</span><span class="hljs-punctuation">,</span><span class="hljs-number">8</span>(<span class="hljs-keyword">x</span><span class="hljs-number">22</span>)   //<span class="hljs-keyword">x</span><span class="hljs-number">22</span>是数组的基地址，<span class="hljs-number">8</span>是偏移量，<span class="hljs-keyword">x</span><span class="hljs-number">9</span>是将数据从内存中读取到的目标寄存器<br></code></pre></td></tr></table></figure>
+
+<p>与载入指令相反的是存储指令<strong>sd(store)<strong>，从寄存器把数据复制到内存，格式与</strong>ld</strong>相同。</p>
+<p>因为加载和存储指令中的地址是二进制数，所以作为主存的DRAM用二进制数来表示容量大小，而不是十进制</p>
+<h3 id="常数或立即操作数"><a href="#常数或立即操作数" class="headerlink" title="常数或立即操作数"></a>常数或立即操作数</h3><p>程序经常会用到常数</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs llvm">addi <span class="hljs-keyword">x</span><span class="hljs-number">22</span><span class="hljs-punctuation">,</span><span class="hljs-keyword">x</span><span class="hljs-number">22</span><span class="hljs-punctuation">,</span><span class="hljs-number">4</span>   //<span class="hljs-keyword">x</span><span class="hljs-number">22</span><span class="hljs-operator">=</span><span class="hljs-keyword">x</span><span class="hljs-number">22</span><span class="hljs-number">+4</span><br></code></pre></td></tr></table></figure>
+
+<p>常数0十分重要用x0硬连线到0。</p>
+<h2 id="有符号数和无符号数"><a href="#有符号数和无符号数" class="headerlink" title="有符号数和无符号数"></a>有符号数和无符号数</h2><p>计算机中所有信息都由<strong>二进制数位</strong>表示（bit）在64位双字中，从右往左依次编号为0，1，2，3，……63</p>
+<p>（为叙述方便，该笔记接下来会有更少的位数表示）</p>
+<ul>
+<li>最低有效位：最右侧的位置，即第0位</li>
+<li>最高有效位：最左侧的位置，即第63位</li>
+</ul>
+<p>64位可以表示0到2^64-1的数，若计算机计算后的结果不能用最右端的硬件位表示，则称<strong>溢出发生</strong></p>
+<p>计算机程序可以用来计算正数还有负数，但是对于计算机来说，需要一种编码能够表示正负数。这样，数据在计算机内部是以<strong>编码</strong>形式存储的。</p>
+<p>最简单的办法就是增加一个单独的符号位，这样的编码称为<strong>原码</strong>，但是这样就会面对0的符号问题，这会给程序员带来大意，而且当一个小数减去大数的时候，就会发生不断向前借位，最终产生无数前导1的问题。于是人们用另外一种编码表示数据，<strong>补码</strong>。</p>
+<p>在补码中最左一位用来表示符号，0为正1为负</p>
+<p>0000—–&gt;0</p>
+<p>0001—–&gt;1</p>
+<p>1000—–&gt;-8</p>
+<p>1111—–&gt;-1</p>
+<p>64位补码可表示范围为，0~2^63-1</p>
+<p>观察得出，除去第一位的符号位，其余数位表示的是数的大小关系，如000表示最小，111表示最大</p>
+<p>所以0000是最小的正数，0111是最大的正数，1000是最小的负数，1111是最大的负数</p>
+<p>这是基于<strong>对称性原理</strong>得出的，这样使得正数补码的范围与负数补码的范围相同，而且每一个正数都有与之对应的负数，同时避免了正负0的问题。</p>
+<p><strong>注</strong>：当二进制模式下最左面的保留位与左面的无线数位不相同时（符号位不正确）溢出发生：0负1正</p>
+<p>补码转换规则</p>
+<ul>
+<li><strong>正数</strong>：与原码相同</li>
+<li><strong>负数</strong>：原码取反后加一</li>
+</ul>
+<p><em><strong>补码的数学原理</strong></em></p>
+<p>在计算机进行数学运算时，不同的运算往往需要不同的硬件加以适配，加减法需要用到不同的运算电路，为了简化这一过程，利用数学定律将减法转换为加法，这样就可以在只用一种硬件电路的情况下，实现假发减法的运算</p>
+<p>补码的作用是将减法转为加法即2+（-5）&#x3D;2-5，其内在原理是利用了2+（0-5）&#x3D;2+0-5&#x3D;2-5</p>
+<p>也就是<strong>5+（-5）&#x3D;0</strong></p>
+<p>对此，只要找到一种数的表达方式能使该等式成立，就是补码的设计原理</p>
+<p>假设一个四位运算器，5表示为0101，对于四位运算器来说，0000与10000与1….10000是一样的，在运算器中都只会存储0000，由此我们可以得出补码的转换步骤</p>
+<ul>
+<li>取反，0101-&gt;1010<strong>取反是将每位上的01换成10，等效于用1111减去原码</strong></li>
+<li>加一，原码加上取反原码之后一定是1111，这是取反的原理，在加一就变成了10000，在四位运算器中还是相当于0000</li>
+</ul>
+<p>因此，只要将原码取反加一，就可表示源码的相反数（相加等于0）</p>
+<p><strong>注</strong>：补码的转换规则是由观察补码，总结其性质以及一些数学计算得出的，而不是先制定转换规则，在由规则计算补码，因果关系不能倒。</p>
+<h2 id="计算机中的指令表示"><a href="#计算机中的指令表示" class="headerlink" title="计算机中的指令表示"></a>计算机中的指令表示</h2><p>人使用指令和计算机识别指令的方式是不同的，指令在计算机用数字表示，指令的每个部分都可被视为一个独立的数，这些数组合在一起就构成了指令。</p>
+<p>由于16是2的幂，所以经常用16进制数代替2进制数，每四位一换。在用数字表示指令时，计算机会将指令分段，为了使计算机不用额外的设计就能够执行指令，我们希望所有指令的格式相同。但是分段后，每一段都限制了最大数位长，但是有时候我们需要从内存中调取数据，内存地址的长度远远大于最大限制数位长，这就会使指令变长。至此我们发现，指令格式的统一与指令长度产生了矛盾，于是引出了第三个设计原则。</p>
+<p><strong>原则3：优秀的设计需要适当的折中</strong></p>
+<p>对此我们采取的措施是，保持所有的指令长度相同。但是对指令进行分类，不同的指令使用不同的格式</p>
+<h3 id="1-R-型指令（Register-type）"><a href="#1-R-型指令（Register-type）" class="headerlink" title="1. R 型指令（Register-type）"></a>1. <strong>R 型指令（Register-type）</strong></h3><p>R 型指令是 RISC-V 中最基本的指令类型，主要用于&#x3D;&#x3D;<strong>寄存器</strong>&#x3D;&#x3D;之间的操作。它通常用于&#x3D;&#x3D;<strong>算术、逻辑运算等指令</strong>&#x3D;&#x3D;，需要三个寄存器作为操作数。</p>
+<h4 id="格式"><a href="#格式" class="headerlink" title="格式"></a><strong>格式</strong></h4><p>R 型指令的格式是固定的，32 位的指令，其中的字段如下：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>位数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>opcode</code></td>
+<td>7</td>
+<td>操作码，定义了指令的基本操作类型</td>
+</tr>
+<tr>
+<td><code>rd</code></td>
+<td>5</td>
+<td>目标寄存器，用来存放运算结果</td>
+</tr>
+<tr>
+<td><code>funct3</code></td>
+<td>3</td>
+<td>功能码，用于区分不同的运算类型</td>
+</tr>
+<tr>
+<td><code>rs1</code></td>
+<td>5</td>
+<td>第一个源寄存器</td>
+</tr>
+<tr>
+<td><code>rs2</code></td>
+<td>5</td>
+<td>第二个源寄存器</td>
+</tr>
+<tr>
+<td><code>funct7</code></td>
+<td>7</td>
+<td>扩展功能码，进一步定义指令的行为</td>
+</tr>
+</tbody></table>
+<h3 id="2-S-型指令（Store-type）"><a href="#2-S-型指令（Store-type）" class="headerlink" title="2. S 型指令（Store-type）"></a>2. <strong>S 型指令（Store-type）</strong></h3><p>S 型指令主要用于&#x3D;&#x3D;<strong>存储指令</strong>&#x3D;&#x3D;，即将数据从&#x3D;&#x3D;<strong>寄存器存储到内存</strong>&#x3D;&#x3D;中。它通常涉及到一个源寄存器（提供要存储的数据），以及一个基址寄存器（提供内存地址）。</p>
+<h4 id="格式-1"><a href="#格式-1" class="headerlink" title="格式"></a><strong>格式</strong></h4><p>S 型指令的格式如下：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>位数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>opcode</code></td>
+<td>7</td>
+<td>操作码，定义了指令的基本操作类型</td>
+</tr>
+<tr>
+<td><code>imm[11:5]</code></td>
+<td>7</td>
+<td>存储地址的高 7 位</td>
+</tr>
+<tr>
+<td><code>rs2</code></td>
+<td>5</td>
+<td>源寄存器，提供要存储的数据</td>
+</tr>
+<tr>
+<td><code>rs1</code></td>
+<td>5</td>
+<td>基址寄存器，提供内存地址</td>
+</tr>
+<tr>
+<td><code>funct3</code></td>
+<td>3</td>
+<td>功能码，定义存储类型</td>
+</tr>
+<tr>
+<td><code>imm[4:0]</code></td>
+<td>5</td>
+<td>存储地址的低 5 位</td>
+</tr>
+</tbody></table>
+<h3 id="3-I-型指令（Immediate-type）"><a href="#3-I-型指令（Immediate-type）" class="headerlink" title="3. I 型指令（Immediate-type）"></a>3. <strong>I 型指令（Immediate-type）</strong></h3><p>I 型指令用于操作数为&#x3D;&#x3D;<strong>立即数</strong>&#x3D;&#x3D;的情况。它常用于与&#x3D;&#x3D;<strong>常量或立即数值进行算术或逻辑运算</strong>&#x3D;&#x3D;，或者进行&#x3D;&#x3D;<strong>加载数据到寄存器</strong>&#x3D;&#x3D;。</p>
+<h4 id="格式-2"><a href="#格式-2" class="headerlink" title="格式"></a><strong>格式</strong></h4><p>I 型指令的格式如下：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>位数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>opcode</code></td>
+<td>7</td>
+<td>操作码，定义了指令的基本操作类型</td>
+</tr>
+<tr>
+<td><code>rd</code></td>
+<td>5</td>
+<td>目标寄存器，存放运算结果</td>
+</tr>
+<tr>
+<td><code>funct3</code></td>
+<td>3</td>
+<td>功能码，定义运算类型</td>
+</tr>
+<tr>
+<td><code>rs1</code></td>
+<td>5</td>
+<td>第一个源寄存器</td>
+</tr>
+<tr>
+<td><code>imm</code></td>
+<td>12</td>
+<td>立即数（常数）</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>R 型指令</strong> 主要用于寄存器之间的算术和逻辑运算。</li>
+<li><strong>S 型指令</strong> 主要用于将数据从寄存器存储到内存。</li>
+<li><strong>I 型指令</strong> 主要用于操作寄存器与立即数的运算，或从内存加载数据到寄存器。</li>
+</ul>
+<p>通过这些类型的指令，RISC-V 架构实现了简单而高效的计算和数据处理方式。</p>
+<h3 id="4-J型指令（Jump-type"><a href="#4-J型指令（Jump-type" class="headerlink" title="4. J型指令（Jump-type)"></a>4. J型指令（Jump-type)</h3><p><strong>跳转</strong>：<code>JAL</code> 会无条件地跳转到一个计算出的地址（目标地址）。这个目标地址是通过立即数和当前指令的地址相加计算得到的。</p>
+<p><strong>链接</strong>：<code>JAL</code> 指令的链接功能是将当前指令的地址存入指定的寄存器（<code>rd</code> 寄存器），以便后续进行函数返回操作。通常，<code>rd</code> 寄存器用于存储返回地址，也就是跳转到新地址之前的位置。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>位数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>opcode</code></td>
+<td>7</td>
+<td>操作码，固定为 <code>1101111</code></td>
+</tr>
+<tr>
+<td><code>rd</code></td>
+<td>5</td>
+<td>目标寄存器（通常用于存储返回地址）</td>
+</tr>
+<tr>
+<td><code>imm[20]</code></td>
+<td>1</td>
+<td>立即数的第 20 位</td>
+</tr>
+<tr>
+<td><code>imm[10:1]</code></td>
+<td>10</td>
+<td>立即数的第 10 到 1 位</td>
+</tr>
+<tr>
+<td><code>imm[11]</code></td>
+<td>1</td>
+<td>立即数的第 11 位</td>
+</tr>
+<tr>
+<td><code>imm[19:12]</code></td>
+<td>8</td>
+<td>立即数的第 19 到 12 位</td>
+</tr>
+<tr>
+<td><code>imm</code></td>
+<td>20</td>
+<td>立即数，用于计算跳转目标地址</td>
+</tr>
+</tbody></table>
+<p>在需要执行函数时，jump会跳转函数的入口地址（通过立即数计算得出），而后通过存储在目标寄存器中的地址返回</p>
+<h2 id="逻辑操作"><a href="#逻辑操作" class="headerlink" title="逻辑操作"></a>逻辑操作</h2><p>最初的计算机只对整字进行操作，但是随着需要进一步增长，我们发现对字段甚至单字操作都是很有必要的，由此诞生了逻辑操作。</p>
+<table>
+<thead>
+<tr>
+<th>按位与</th>
+<th><code>and rd, rs1, rs2</code></th>
+<th>按位与</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td><code>andi rd, rs1, imm</code></td>
+<td>按位与（立即数）</td>
+</tr>
+<tr>
+<td>按位或</td>
+<td><code>or rd, rs1, rs2</code></td>
+<td>按位或</td>
+</tr>
+<tr>
+<td></td>
+<td><code>ori rd, rs1, imm</code></td>
+<td>按位或（立即数）</td>
+</tr>
+<tr>
+<td>按位异或</td>
+<td><code>xor rd, rs1, rs2</code></td>
+<td>按位异或</td>
+</tr>
+<tr>
+<td></td>
+<td><code>xori rd, rs1, imm</code></td>
+<td>按位异或（立即数）</td>
+</tr>
+<tr>
+<td>按位取反</td>
+<td><code>xori rd, rs1, -1</code></td>
+<td>按位取反（通过 XOR 实现）</td>
+</tr>
+<tr>
+<td>左移</td>
+<td><code>sll rd, rs1, rs2</code></td>
+<td>左移</td>
+</tr>
+<tr>
+<td></td>
+<td><code>slli rd, rs1, imm</code></td>
+<td>左移（立即数）</td>
+</tr>
+<tr>
+<td>逻辑右移</td>
+<td><code>srl rd, rs1, rs2</code></td>
+<td>逻辑右移</td>
+</tr>
+<tr>
+<td></td>
+<td><code>srli rd, rs1, imm</code></td>
+<td>逻辑右移（立即数）</td>
+</tr>
+<tr>
+<td>算术右移</td>
+<td><code>sra rd, rs1, rs2</code></td>
+<td>算术右移</td>
+</tr>
+<tr>
+<td></td>
+<td><code>srai rd, rs1, imm</code></td>
+<td>算术右移（立即数）</td>
+</tr>
+</tbody></table>
+<p>以上为所有逻辑操作及其格式</p>
+<h3 id="移位"><a href="#移位" class="headerlink" title="移位"></a>移位</h3><p>一个双字中所有位都向左移或者右移，用0填补空缺</p>
+<p><strong>如</strong>：00001001左移两位—-&gt;00100100</p>
+ <figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs llvm">slli 左移立即数 srli 右移立即数<br>slli <span class="hljs-keyword">x</span><span class="hljs-number">11</span>，<span class="hljs-keyword">x</span><span class="hljs-number">19</span>，<span class="hljs-number">4</span>   //将<span class="hljs-keyword">x</span><span class="hljs-number">19</span>中的数左移<span class="hljs-number">4</span>位，并存放到<span class="hljs-keyword">x</span><span class="hljs-number">11</span><br></code></pre></td></tr></table></figure>
+
+<p>移位指令通常为I型指令，因为不能对64位寄存器进行63位的左移活动，只有I型的12位immediate字段的低6位被使用。同时逻辑左移对二进制数来说，相当于乘2^i。</p>
+<h3 id="与"><a href="#与" class="headerlink" title="与"></a>与</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">and</span> <span class="hljs-built_in">x9</span>,<span class="hljs-built_in">x10</span>,<span class="hljs-built_in">x11</span>   <br></code></pre></td></tr></table></figure>
+
+<p>按位操作，当两个操作数的位都是1时，结果才是1</p>
+<p><strong>如</strong>：100011 and 110001——&gt;100001</p>
+<h3 id="或"><a href="#或" class="headerlink" title="或"></a>或</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">or</span> <span class="hljs-built_in">x9</span>,<span class="hljs-built_in">x10</span>,<span class="hljs-built_in">x11</span><br></code></pre></td></tr></table></figure>
+
+<p>两个操作数有一个是1，结果是1</p>
+<p><strong>如</strong>：100011 or 110001——-&gt;110011</p>
+<h3 id="异或"><a href="#异或" class="headerlink" title="异或"></a>异或</h3><p>先介绍取反<strong>not</strong>只有一个操作数，将每一位的0，1互换，但是为了保证三个操作数就引入了<strong>异或</strong></p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs llvm"><span class="hljs-keyword">xor</span> <span class="hljs-keyword">x</span><span class="hljs-number">9</span><span class="hljs-punctuation">,</span><span class="hljs-keyword">x</span><span class="hljs-number">10</span><span class="hljs-punctuation">,</span><span class="hljs-keyword">x</span><span class="hljs-number">11</span><br></code></pre></td></tr></table></figure>
+
+<p>当两个位相同时为0，不同时为1</p>
+<h2 id="用于决策的指令"><a href="#用于决策的指令" class="headerlink" title="用于决策的指令"></a>用于决策的指令</h2><p>计算机不同于普通计算器，计算机有着决策能力，可以根据输入数据和计算中产生的不同的值来执行不同的指令</p>
+<p>RISC-V包含两个决策类指令</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">beq</span> rs1,rs2,L1   <span class="hljs-comment">//若rs1等于rs2则跳转到标签L1的语句执行</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">bne</span> rs1,rs2,L1   <span class="hljs-comment">//若rs1不等于rs2则跳转到标签L1的语句执行</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><p>判断循环条件是需要进行很多的比较，但是尽管比较的关系不同，指令的格式却是相同的</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">blt</span>    <span class="hljs-comment">//用于小于则分支</span><br><span class="hljs-keyword">bge</span>    <span class="hljs-comment">//用于大于则分支</span><br><span class="hljs-symbol">bltu</span>   <span class="hljs-comment">//无符号的小于则分支</span><br><span class="hljs-symbol">bgeu</span>   <span class="hljs-comment">//无符号的大于则分支</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>但是条件代码存在一个缺点，如果许多指令总是设置他们，就会生成让流水线执行困难的依赖关系</strong></p>
+<h3 id="边界检查的简便方法"><a href="#边界检查的简便方法" class="headerlink" title="边界检查的简便方法"></a>边界检查的简便方法</h3><p>将有符号数当作而无符号数处理，给我们提供了一种低成本的检查是否0&lt;&#x3D;x&lt;y，如果x大于一定范围，就可视为越界并将其视为负数</p>
+<h3 id="case-switch语句"><a href="#case-switch语句" class="headerlink" title="case&#x2F;switch语句"></a>case&#x2F;switch语句</h3><p>该语句包含多个分支，实现他的有效方式是编码形成指令序列的地址表，称为分支地址表，程序只需要索引到表中，然后跳转到相应的指令序列</p>
+<p>分支表只是一个双字数组，包含着代码与标签相对应的地址。程序将分指标中的相应条目加载到寄存器中，然后需要使用寄存器中的地址进行跳转。jalr指令便是用于此目的。</p>
+<h2 id="计算机硬件对于过程的支持"><a href="#计算机硬件对于过程的支持" class="headerlink" title="计算机硬件对于过程的支持"></a>计算机硬件对于过程的支持</h2><p><strong>过程（procedure）</strong>或函数适用于结构化编程的工具，有助于提高程序的可阅读性和可理解性。过程允许程序员一次只专注于程序的一部分，过程的参数可以传递数值并返回结果，相当于连接程序于过程之间的桥梁，因此充当程序于数据的接口。</p>
+<p>就像警察处理案件时需要请侦探帮忙一样，侦探不需要知道太多，只需要明确什么需要查明白就可以了，任务结束之后也不需要过问其他细节。</p>
+<p>在执行过程是，程序必须遵循以下的六个步骤</p>
+<ol>
+<li>将参数放在过程可以访问到的位置</li>
+<li>将控制权转交给过程</li>
+<li>获取过程所需的存储资源</li>
+<li>执行所需的任务</li>
+<li>将结果值放在调用程序可以访问到的位置</li>
+<li>将控制返回到初始点，因为过程可以从程序中的多个点调用</li>
+</ol>
+<p>如上所示，在调用过程时需要频繁的传输数据。为了提高访问数据的效率，我们希望调用过程时尽量用计算机内部访问数据最快的位置—<strong>寄存器</strong></p>
+<p>寄存器是计算机中访问数据最快的存储位置，因此期望尽可能使用寄存器处理数据。在<strong>RISC-V</strong>架构下，分配寄存器时遵从以下约定</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>名称</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>x0</td>
+<td>zero</td>
+<td>恒为零</td>
+</tr>
+<tr>
+<td>x1</td>
+<td>ra</td>
+<td>返回地址</td>
+</tr>
+<tr>
+<td>x2</td>
+<td>sp</td>
+<td>栈指针</td>
+</tr>
+<tr>
+<td>x3</td>
+<td>gp</td>
+<td>全局指针</td>
+</tr>
+<tr>
+<td>x4</td>
+<td>tp</td>
+<td>线程指针</td>
+</tr>
+<tr>
+<td>x5-x7</td>
+<td>t0-t2</td>
+<td>临时寄存器</td>
+</tr>
+<tr>
+<td>x8-x9</td>
+<td>s0-s1</td>
+<td>被调用者保存寄存器（含 fp）</td>
+</tr>
+<tr>
+<td>x10-x17</td>
+<td>a0-a7</td>
+<td>参数寄存器（含返回值）</td>
+</tr>
+<tr>
+<td>x18-x27</td>
+<td>s2-s11</td>
+<td>被调用者保存寄存器</td>
+</tr>
+<tr>
+<td>x28-x31</td>
+<td>t3-t6</td>
+<td>临时寄存器</td>
+</tr>
+</tbody></table>
+<p>除此之外，还包含一个跳转连接指令<strong>jal</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">jal</span> <span class="hljs-built_in">x1</span>,ProcedureAddress   <span class="hljs-comment">//跳转到ProdureAddress 并将此地址写进x1</span><br></code></pre></td></tr></table></figure>
+
+<p>当过程结束后，需要返回指令。返回地址已经写进了x1，但是仍需要一条指令实现返回跳转。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">jalr</span> <span class="hljs-built_in">x0</span>,<span class="hljs-number">0</span>(<span class="hljs-built_in">x1</span>)<br></code></pre></td></tr></table></figure>
+
+<p>在存储程序概念中，需要一个寄存器保存大哥前执行指令的地址，由于历史原因，这个寄存器总是被称为<strong>程序计数器</strong>（program counter）尽管更合理的名字是指令地址寄存器。jal指令实际上将PC+4保存在指定寄存器（x1）中，已连接到后续指令的字节地址来设置过程返回</p>
+<p>其原理为：PC总是储存当前指令的执行地址，当执行到<strong>jal</strong>跳转时，PC存储的也是jal指令的地址，但是我们都知道，过程返回时通常回到jal的下一条指令，而在RISC-V架构下，指令都是32位长的，即四个字节，所以保存在x1的地址是PC+4</p>
+<h3 id="使用更多的寄存器"><a href="#使用更多的寄存器" class="headerlink" title="使用更多的寄存器"></a>使用更多的寄存器</h3><p>在上述调用过程时，我们最多只有8个寄存器可以使用，但是实际情况往往更加复杂，当我们已经使用了所有8个寄存器之后，还需要保存计算的中间结果，这时就需要将寄存器换到存储器。对此我们使用<strong>栈</strong>来实现上述操作</p>
+<p><strong>栈</strong>是一种后进先出的队列。使用时，需要一个指向栈中新分配地址的指针，以表示下一个过程应该放置换出寄存器的位置。在RISC-V架构中，<strong>栈指针</strong>（stack pointer）是寄存器x2，也成为sp。将数据放入栈中成为<strong>压栈</strong>，将数据移出栈中成为<strong>弹栈</strong>，栈将按照从高到低的地址顺序增长。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">addi</span> <span class="hljs-built_in">sp</span>,<span class="hljs-built_in">sp</span>,-<span class="hljs-number">24</span>  <span class="hljs-comment">//为新数据申请3个单位空间，每个空间是一个双字，所以是8*3=24</span><br>                <span class="hljs-comment">//同时栈地址从高到低，所以是-24</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="嵌套过程"><a href="#嵌套过程" class="headerlink" title="嵌套过程"></a>嵌套过程</h3><p>不调用其他过程的成为叶子过程（leaf），但是实际应用时，一个过程往往需要另外一个过程。就如一个侦探做任务时可能需要其他侦探一样。但是在调用叶程序时，会用到jal跳转链接命令，但这时，存在x1的地址就变成了两个，会引起寄存器的冲突。</p>
+<p>对此的解决方法是将必须保存的寄存器压栈。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0/" class="category-chain-item">学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/cs-%E5%AD%A6%E4%B9%A0/" class="print-no-link">#cs-学习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>计组</div>
+      <div>https://elvpatic.github.io/2025/02/19/计组/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>cl0ud</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/19/TCP-IP/" title="c++">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">c++</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="数据结构">
+                        <span class="hidden-mobile">数据结构</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
