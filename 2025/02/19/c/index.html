@@ -27,7 +27,7 @@
 <meta property="og:description" content="何时需要创建类在 C++ 编程中，创建类通常是在你需要组织、封装和管理数据及其相关行为时的一种设计手段。下面是一些常见的情境和原因，说明何时应该创建类：  1. 当需要封装数据和行为时 封装（Encapsulation） ：当你有一组数据和相关的操作，并且希望将它们组合在一起以隐藏内部实现细节时，类是很好的选择。  例如，一个表示“学生”的类，可以封装姓名、学号和成绩，并提供操作这些数据的方法（如">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-19T05:34:16.000Z">
-<meta property="article:modified_time" content="2025-03-11T16:59:03.396Z">
+<meta property="article:modified_time" content="2025-03-18T07:19:55.153Z">
 <meta property="article:author" content="cl0ud">
 <meta property="article:tag" content="cs-学习">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          1.7k 字
         
       </span>
     
@@ -376,7 +376,11 @@
 </ul>
 <figure class="highlight zephir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs zephir">#include &lt;iostream&gt;using <span class="hljs-keyword">namespace</span> <span class="hljs-title">std</span>;<span class="hljs-keyword">double</span> division(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)&#123;<br>   <span class="hljs-keyword">if</span>( b == <span class="hljs-number">0</span> )<br>   &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-string">&quot;Division by zero condition!&quot;</span>;<br>   &#125;<br>   <span class="hljs-keyword">return</span> (a/b);&#125;<span class="hljs-keyword">int</span> main ()&#123;<br>   <span class="hljs-keyword">int</span> x = <span class="hljs-number">50</span>;<br>   <span class="hljs-keyword">int</span> y = <span class="hljs-number">0</span>;<br>   <span class="hljs-keyword">double</span> z = <span class="hljs-number">0</span>;<br> <br>   <span class="hljs-keyword">try</span> &#123;<br>     z = division(x, y);<br>     cout &lt;&lt; z &lt;&lt; endl;<br>   &#125;<span class="hljs-keyword">catch</span> (<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* msg) &#123;<br>     cerr &lt;&lt; msg &lt;&lt; endl;<br>   &#125;<br><br>   <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;<br></code></pre></td></tr></table></figure>
 
-<h2 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h2>
+<h2 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h2><p>在递归调用时，有返回值的函数一定要用</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-function"><span class="hljs-keyword">return</span> <span class="hljs-title">produre</span><span class="hljs-params">()</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p>或者引入另外一个变量接收返回值，再由返回值进一步判断</p>
+
                 
               </div>
             
@@ -466,12 +470,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2025/02/19/TCP-IP/" title="TCP-IP">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">TCP-IP</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/02/19/TCP-IP/" title="TCP-IP">
-                        <span class="hidden-mobile">TCP-IP</span>
+                      <a href="/2025/02/19/%E8%AE%A1%E7%BB%84/" title="计组">
+                        <span class="hidden-mobile">计组</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
