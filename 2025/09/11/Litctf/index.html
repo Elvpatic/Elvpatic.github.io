@@ -19,25 +19,22 @@
   <meta name="author" content="cl0ud">
   <meta name="keywords" content="blog,cl0ud,cs">
   
-    <meta name="description" content="做题狗正在学习web漏洞，感觉以后还是web层面的漏洞更多一些 学习链接：https:&#x2F;&#x2F;github.com&#x2F;hongriSec&#x2F;Web-Security-Attack.git 以后不定期更新各种web题的wp 0xgame2023signin这道题的考点是sourcemap泄露，只要按F12找到main.js文件就可以。 source.map就是开发者开发网站的源文件，可以将编译后的代码映射为">
+    <meta name="description" content="彩蛋NSSCTF{First_t0_The_k3y!_S0_ne3t? _R3ady_Pl4yer_000ne_F1rst_to_Th3_eggggggggg!} 我Flag呢？F12查看源码即可 Follow me and hack me简单的HTTP协议，Hackbar插件传参 这是什么？SQL ！注一下 ！这题很有意思，这题的flag并不在当前数据库，所以不能直接用database()查询，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="web-wp">
-<meta property="og:url" content="https://elvpatic.github.io/2024/11/04/wp/index.html">
+<meta property="og:title" content="Litctf">
+<meta property="og:url" content="https://elvpatic.github.io/2025/09/11/Litctf/index.html">
 <meta property="og:site_name" content="cl0ud&#39;s blog">
-<meta property="og:description" content="做题狗正在学习web漏洞，感觉以后还是web层面的漏洞更多一些 学习链接：https:&#x2F;&#x2F;github.com&#x2F;hongriSec&#x2F;Web-Security-Attack.git 以后不定期更新各种web题的wp 0xgame2023signin这道题的考点是sourcemap泄露，只要按F12找到main.js文件就可以。 source.map就是开发者开发网站的源文件，可以将编译后的代码映射为">
+<meta property="og:description" content="彩蛋NSSCTF{First_t0_The_k3y!_S0_ne3t? _R3ady_Pl4yer_000ne_F1rst_to_Th3_eggggggggg!} 我Flag呢？F12查看源码即可 Follow me and hack me简单的HTTP协议，Hackbar插件传参 这是什么？SQL ！注一下 ！这题很有意思，这题的flag并不在当前数据库，所以不能直接用database()查询，">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://elvpatic.github.io/.io//Git/text/cl0ud-blog/source/_posts/wp/image-20250605004724610.png">
-<meta property="og:image" content="https://elvpatic.github.io/.io//blog/blog/picture/image-20250605005624472.png">
-<meta property="article:published_time" content="2024-11-04T07:03:24.000Z">
-<meta property="article:modified_time" content="2025-09-11T14:12:24.559Z">
+<meta property="article:published_time" content="2025-09-11T11:26:16.000Z">
+<meta property="article:modified_time" content="2025-09-24T15:19:36.586Z">
 <meta property="article:author" content="cl0ud">
 <meta property="article:tag" content="ctf-web">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://elvpatic.github.io/.io//Git/text/cl0ud-blog/source/_posts/wp/image-20250605004724610.png">
   
   
   
-  <title>web-wp - cl0ud&#39;s blog</title>
+  <title>Litctf - cl0ud&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -203,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="web-wp"></span>
+            <span id="subtitle" data-typed-text="Litctf"></span>
           
         </div>
 
@@ -214,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-11-04 15:03" pubdate>
-          2024年11月4日 下午
+        <time datetime="2025-09-11 19:26" pubdate>
+          2025年9月11日 晚上
         </time>
       </span>
     
@@ -226,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          625 字
+          123 字
         
       </span>
     
@@ -237,7 +234,7 @@
         
         
         
-          6 分钟
+          2 分钟
         
       </span>
     
@@ -283,41 +280,16 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">web-wp</h1>
+            <h1 id="seo-header">Litctf</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="做题狗"><a href="#做题狗" class="headerlink" title="做题狗"></a>做题狗</h2><p>正在学习web漏洞，感觉以后还是web层面的漏洞更多一些</p>
-<p>学习链接：<a target="_blank" rel="noopener" href="https://github.com/hongriSec/Web-Security-Attack.git">https://github.com/hongriSec/Web-Security-Attack.git</a></p>
-<p>以后不定期更新各种web题的wp</p>
-<h2 id="0xgame2023"><a href="#0xgame2023" class="headerlink" title="0xgame2023"></a>0xgame2023</h2><h3 id="signin"><a href="#signin" class="headerlink" title="signin"></a>signin</h3><p>这道题的考点是sourcemap泄露，只要按F12找到main.js文件就可以。</p>
-<p>source.map就是开发者开发网站的源文件，可以将编译后的代码映射为源代码，相当于一个.exe文件，编译器在生成.exe时附带一个.map文件里面是源码，方便开发者直接调试源码。</p>
-<p>宗上，sourcemap泄露就相当于网站的源码泄露，攻击者可以通过分析代码来寻找漏洞。</p>
-<h3 id="hello-http"><a href="#hello-http" class="headerlink" title="hello_http"></a>hello_http</h3><p>这道题是http协议，跟着网页的指示，利用Hackbar插件即可</p>
-<p><img src="/.io//Git/text/cl0ud-blog/source/_posts/wp/image-20250605004724610.png" srcset="/img/loading.gif" lazyload alt="image-20250605004724610"></p>
-<p>有个小插曲是，第一个get传参由于主播的英语水平问题，翻译不明白导致不知道该传什么参数。。。</p>
-<p>Error:The get parameter <strong>query</strong> must be <strong>ctf</strong></p>
-<p>还有一个报错就是</p>
-<p>Error:You are not admin</p>
-<p>这是之前学http协议遗漏的，需要更改cookie，使role&#x3D;admin</p>
-<p><img src="/.io//blog/blog/picture/image-20250605005624472.png" srcset="/img/loading.gif" lazyload alt="image-20250605005624472"></p>
-<h2 id="baby-php"><a href="#baby-php" class="headerlink" title="baby_php"></a>baby_php</h2><p>简单的阅读php源码然后执行绕过</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs <?php">// flag in flag.php<br>highlight_file(__FILE__);<br>if (isset($_GET[&#x27;a&#x27;]) &amp;&amp; isset($_GET[&#x27;b&#x27;]) &amp;&amp; isset($_POST[&#x27;c&#x27;]) &amp;&amp; isset($_COOKIE[&#x27;name&#x27;])) &#123;<br>  $a = $_GET[&#x27;a&#x27;];<br>  $b = $_GET[&#x27;b&#x27;];<br>  $c = $_POST[&#x27;c&#x27;];<br>  $name = $_COOKIE[&#x27;name&#x27;];<br><br>  if ($a != $b &amp;&amp; md5($a) == md5($b)) &#123;<br>    if (!is_numeric($c) &amp;&amp; $c != 1024 &amp;&amp; intval($c) == 1024) &#123;<br>      include($name.&#x27;.php&#x27;);<br>    &#125;<br>  &#125;<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
-
-<p>接收两个来自GET的参数，一个POST参数，还有一个Cookie</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-keyword">if</span> (<span class="hljs-variable">$a</span> != <span class="hljs-variable">$b</span> &amp;&amp; <span class="hljs-built_in">md5</span>(<span class="hljs-variable">$a</span>) == <span class="hljs-built_in">md5</span>(<span class="hljs-variable">$b</span>)) <br></code></pre></td></tr></table></figure>
-
-<p>非常经典的php md5绕过，md5处理后的值如果是以0e开头的，在比较时会被认为是0，所以只要使用两个不同的a，b，值但是md5加密后均为0e开头的式子就可以了。附上网址<a target="_blank" rel="noopener" href="https://www.cnblogs.com/ainsliaea/p/15126218.html">PHP md5 相等绕过 - Ainsliaea - 博客园</a></p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lisp">if (!is_numeric($c) <span class="hljs-symbol">&amp;&amp;</span> $c != <span class="hljs-number">1024</span> <span class="hljs-symbol">&amp;&amp;</span> intval($c) == <span class="hljs-number">1024</span>)<br></code></pre></td></tr></table></figure>
-
-<p>同样十分经典，首先匹配c是否为数字，然后是截取c的整数部分为1024，那么只要输入1024开头的字符串即可，c&#x3D;1024abc</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">include</span><span class="hljs-params">(<span class="hljs-variable">$name</span>.<span class="hljs-string">&#x27;.php&#x27;</span>)</span></span><br></code></pre></td></tr></table></figure>
-
-<p>php伪协议，不能直接name&#x3D;flag，这样会导致执行flag.php，多数情况下都只是定义了一个$flag变量而已俄而且不会显示出来，你什么都看不见，因此需要用php伪协议读取出flag.php的内容。</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">name=php://<span class="hljs-built_in">filter</span>/<span class="hljs-built_in">read</span>=<span class="hljs-built_in">convert</span>.base64-encode/resource=flag<br></code></pre></td></tr></table></figure>
-
-<p>因为**.’php’**以为在后面拼接.php的字符串，所以直接&#x3D;flag就可以</p>
+                <h1 id="彩蛋"><a href="#彩蛋" class="headerlink" title="彩蛋"></a>彩蛋</h1><p>NSSCTF{First_t0_The_k3y!_S0_ne3t? _R3ady_Pl4yer_000ne_F1rst_to_Th3_eggggggggg!}</p>
+<h1 id="我Flag呢？"><a href="#我Flag呢？" class="headerlink" title="我Flag呢？"></a>我Flag呢？</h1><p>F12查看源码即可</p>
+<h1 id="Follow-me-and-hack-me"><a href="#Follow-me-and-hack-me" class="headerlink" title="Follow me and hack me"></a>Follow me and hack me</h1><p>简单的HTTP协议，Hackbar插件传参</p>
+<h1 id="这是什么？SQL-！注一下-！"><a href="#这是什么？SQL-！注一下-！" class="headerlink" title="这是什么？SQL ！注一下 ！"></a>这是什么？SQL ！注一下 ！</h1><p>这题很有意思，这题的flag并不在当前数据库，所以不能直接用database()查询，这样查询只会查到当前数据库，也就是ctf库的所有表名，然而实际上flag位于ctftraining库中。</p>
+<p>所以比普通的注入多一步，把所有的库名爆出来，然后才是爆表等等</p>
 
                 
               </div>
@@ -363,8 +335,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>web-wp</div>
-      <div>https://elvpatic.github.io/2024/11/04/wp/</div>
+      <div>Litctf</div>
+      <div>https://elvpatic.github.io/2025/09/11/Litctf/</div>
     </div>
     <div class="license-meta">
       
@@ -376,7 +348,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年11月4日</div>
+          <div>2025年9月11日</div>
         </div>
       
       
@@ -408,15 +380,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/11/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/" title="计算机网络学习">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">计算机网络学习</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2025/09/11/nssctf/" title="nssctf">
+                        <span class="hidden-mobile">nssctf</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
