@@ -16,27 +16,27 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="cl0ud">
-  <meta name="keywords" content="blog,cl0ud,cs">
+  <meta name="author" content="e1vp4tic">
+  <meta name="keywords" content="blog,e1vp4tic,cs">
   
     <meta name="description" content="浮点数的表示形式N &#x3D; ( − 1 )^S × M × R^E  S：浮点数的符号M：一个二进制定点小数，称为尾数（mantissa），一般用定点原码小数表示E：一个二进制定点整数，称为阶码或指数，用移码表示R：基数（隐含），可约定为2、4、16等 第一章引言计算机技术的进步几乎用想着社会的方方面面。硬件的进步是的程序员能够创造除奇妙有用的软件，进而证明了为什么计算机无处不在。现在的科学幻想往往">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计组">
 <meta property="og:url" content="https://elvpatic.github.io/2025/02/19/%E8%AE%A1%E7%BB%84/index.html">
-<meta property="og:site_name" content="cl0ud&#39;s blog">
+<meta property="og:site_name" content="e1vp4tic&#39;s blog">
 <meta property="og:description" content="浮点数的表示形式N &#x3D; ( − 1 )^S × M × R^E  S：浮点数的符号M：一个二进制定点小数，称为尾数（mantissa），一般用定点原码小数表示E：一个二进制定点整数，称为阶码或指数，用移码表示R：基数（隐含），可约定为2、4、16等 第一章引言计算机技术的进步几乎用想着社会的方方面面。硬件的进步是的程序员能够创造除奇妙有用的软件，进而证明了为什么计算机无处不在。现在的科学幻想往往">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://elvpatic.github.io/.io//blog/blog/picture/float-point02.png">
 <meta property="article:published_time" content="2025-02-19T05:34:16.000Z">
 <meta property="article:modified_time" content="2025-03-06T13:58:06.254Z">
-<meta property="article:author" content="cl0ud">
+<meta property="article:author" content="e1vp4tic">
 <meta property="article:tag" content="cs-学习">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://elvpatic.github.io/.io//blog/blog/picture/float-point02.png">
   
   
   
-  <title>计组 - cl0ud&#39;s blog</title>
+  <title>计组 - e1vp4tic&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -70,11 +70,15 @@
 
 
 
+  
+<link rel="stylesheet" href="/css/mac.styl%20/css/indeximg-hover.css">
+
+
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"elvpatic.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-11-03T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"elvpatic.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"Ir7RKiGS9zwhgtD416XsiDP6-gzGzoHsz","app_key":"1SAbfug15rHHsZTk8W9CUHLs","server_url":"https://ir7rkigs.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-11-03T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -84,6 +88,19 @@
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
   
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
 
 
   
@@ -100,7 +117,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>cl0ud</strong>
+      <strong>e1vp4tic</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -865,7 +882,7 @@
       
         <div class="license-meta-item">
           <div>作者</div>
-          <div>cl0ud</div>
+          <div>e1vp4tic</div>
         </div>
       
       
@@ -913,8 +930,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/02/19/TCP-IP/" title="TCP-IP">
-                        <span class="hidden-mobile">TCP-IP</span>
+                      <a href="/2024/12/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="数据结构">
+                        <span class="hidden-mobile">数据结构</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -925,6 +942,37 @@
             </div>
 
             
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"Ir7RKiGS9zwhgtD416XsiDP6-gzGzoHsz","appKey":"1SAbfug15rHHsZTk8W9CUHLs","path":"window.location.pathname","placeholder":null,"avatar":"monsterid","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
           </article>
         </div>
       </div>
@@ -1015,11 +1063,67 @@
 
   <footer>
     <div class="footer-inner">
+  <span id="timeDate">正在载入天数...</span>
+  <span id="times">载入时分秒...</span>
+  <script>
+  var now = new Date();
+  function createtime(){
+      var grt= new Date("11/3/2024 00:00:00");
+      now.setTime(now.getTime()+250);
+      days = (now - grt ) / 1000 / 60 / 60 / 24;
+      dnum = Math.floor(days);
+      hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum);
+      hnum = Math.floor(hours);
+      if(String(hnum).length ==1 ){
+          hnum = "0" + hnum;
+      }
+      minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+      mnum = Math.floor(minutes);
+      if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+      }
+      seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+      snum = Math.round(seconds);
+      if(String(snum).length ==1 ){
+                snum = "0" + snum;
+      }
+      document.getElementById("timeDate").innerHTML = "世间从不缺令人心动的新鲜感，难得的是长久的陪伴，这篇blog已经陪了你&nbsp"+dnum+"&nbsp天";  
+      document.getElementById("times").innerHTML = hnum + "&nbsp时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+  }
+  setInterval("createtime()",250);
+  </script>
+</div>
   
     <div class="footer-content">
        <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
   
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        <span style="margin-right: 1em;">总访问 
+        <span id="leancloud-site-pv"></span>
+         次</span>
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        <span>总访客 
+        <span id="leancloud-site-uv"></span>
+         人</span>
+      </span>
+    
+    
+
+  
+
+</div>
+
   
   
 </div>
@@ -1164,9 +1268,9 @@
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/js/local-search.js" ></script>
-
   <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
 
 
 
