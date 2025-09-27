@@ -36,7 +36,7 @@ h6:hover > .anchorjs-link {
     margin-top: -1rem !important;
   }
 }
-@media (max-width: 89.99vh) {
+@media (max-width: 79.99vh) {
   .scroll-down-bar {
     display: none;
   }
@@ -842,13 +842,13 @@ i.iconfont {
   --post-text-color: #2c3e50;
   --post-heading-color: #1a202c;
   --post-link-color: #0366d6;
-  --link-hover-color: #fe4365;
+  --link-hover-color: #30a9de;
   --link-hover-bg-color: #f8f9fa;
   --line-color: #eaecef;
-  --navbar-bg-color: #fc9d9a;
-  --navbar-text-color: white;
+  --navbar-bg-color: #2f4154;
+  --navbar-text-color: #fff;
   --subtitle-color: #fff;
-  --scrollbar-color: #fec9c9;
+  --scrollbar-color: #c4c6c9;
   --scrollbar-hover-color: #a6a6a6;
   --button-bg-color: transparent;
   --button-hover-bg-color: #f2f3f5;
