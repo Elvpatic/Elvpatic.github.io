@@ -26,14 +26,14 @@
 <meta property="og:site_name" content="e1vp4tic&#39;s blog">
 <meta property="og:description" content="做题狗正在学习web漏洞，感觉以后还是web层面的漏洞更多一些 学习链接：https:&#x2F;&#x2F;github.com&#x2F;hongriSec&#x2F;Web-Security-Attack.git 以后不定期更新各种web题的wp 0xgame2023signin这道题的考点是sourcemap泄露，只要按F12找到main.js文件就可以。 source.map就是开发者开发网站的源文件，可以将编译后的代码映射为">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://elvpatic.github.io/.io//Git/text/cl0ud-blog/source/_posts/wp/image-20250605004724610.png">
-<meta property="og:image" content="https://elvpatic.github.io/.io//Git/text/cl0ud-blog/source/_posts/wp/image-20250605004724610.png">
+<meta property="og:image" content="https://elvpatic.github.io/.io//Git/text/cl0ud-blog/source/_posts/1.png">
+<meta property="og:image" content="https://elvpatic.github.io/.io//Git/text/cl0ud-blog/source/_posts/1-1759037643433-3.png">
 <meta property="article:published_time" content="2024-11-04T07:03:24.000Z">
-<meta property="article:modified_time" content="2025-09-27T14:47:58.417Z">
+<meta property="article:modified_time" content="2025-09-28T05:34:17.246Z">
 <meta property="article:author" content="e1vp4tic">
 <meta property="article:tag" content="ctf-web">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://elvpatic.github.io/.io//Git/text/cl0ud-blog/source/_posts/wp/image-20250605004724610.png">
+<meta name="twitter:image" content="https://elvpatic.github.io/.io//Git/text/cl0ud-blog/source/_posts/1.png">
   
   
   
@@ -72,7 +72,8 @@
 
 
   
-<link rel="stylesheet" href="/css/mac.styl.css">
+<link rel="stylesheet" href="/css/indexing-hover.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
 
 
 
@@ -312,13 +313,13 @@
 <p>source.map就是开发者开发网站的源文件，可以将编译后的代码映射为源代码，相当于一个.exe文件，编译器在生成.exe时附带一个.map文件里面是源码，方便开发者直接调试源码。</p>
 <p>宗上，sourcemap泄露就相当于网站的源码泄露，攻击者可以通过分析代码来寻找漏洞。</p>
 <h3 id="hello-http"><a href="#hello-http" class="headerlink" title="hello_http"></a>hello_http</h3><p>这道题是http协议，跟着网页的指示，利用Hackbar插件即可</p>
-<p><img src="/.io//Git/text/cl0ud-blog/source/_posts/wp/image-20250605004724610.png" srcset="/img/loading.gif" lazyload alt="image-20250605004724610"></p>
+<p><img src="/.io//Git/text/cl0ud-blog/source/_posts/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
 <p>有个小插曲是，第一个get传参由于主播的英语水平问题，翻译不明白导致不知道该传什么参数。。。</p>
 <p>Error:The get parameter <strong>query</strong> must be <strong>ctf</strong></p>
 <p>还有一个报错就是</p>
 <p>Error:You are not admin</p>
 <p>这是之前学http协议遗漏的，需要更改cookie，使role&#x3D;admin</p>
-<p><img src="/.io//Git/text/cl0ud-blog/source/_posts/wp/image-20250605004724610.png" srcset="/img/loading.gif" lazyload alt="image-20250605004724610"></p>
+<p><img src="/.io//Git/text/cl0ud-blog/source/_posts/1-1759037643433-3.png" srcset="/img/loading.gif" lazyload alt="1"></p>
 <h2 id="baby-php"><a href="#baby-php" class="headerlink" title="baby_php"></a>baby_php</h2><p>简单的阅读php源码然后执行绕过</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs <?php">// flag in flag.php<br>highlight_file(__FILE__);<br>if (isset($_GET[&#x27;a&#x27;]) &amp;&amp; isset($_GET[&#x27;b&#x27;]) &amp;&amp; isset($_POST[&#x27;c&#x27;]) &amp;&amp; isset($_COOKIE[&#x27;name&#x27;])) &#123;<br>  $a = $_GET[&#x27;a&#x27;];<br>  $b = $_GET[&#x27;b&#x27;];<br>  $c = $_POST[&#x27;c&#x27;];<br>  $name = $_COOKIE[&#x27;name&#x27;];<br><br>  if ($a != $b &amp;&amp; md5($a) == md5($b)) &#123;<br>    if (!is_numeric($c) &amp;&amp; $c != 1024 &amp;&amp; intval($c) == 1024) &#123;<br>      include($name.&#x27;.php&#x27;);<br>    &#125;<br>  &#125;<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
 
@@ -772,6 +773,11 @@
   <script  src="/js/local-search.js" ></script>
 
 
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+<script src="/js/yinghua.js"></script>
 
 
 
