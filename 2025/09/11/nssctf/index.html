@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://elvpatic.github.io/img/nssctf.png">
 <meta property="article:published_time" content="2025-09-11T11:26:16.000Z">
-<meta property="article:modified_time" content="2025-09-28T06:05:07.035Z">
+<meta property="article:modified_time" content="2025-10-04T11:01:08.113Z">
 <meta property="article:author" content="e1vp4tic">
 <meta property="article:tag" content="ctf-web">
 <meta name="twitter:card" content="summary_large_image">
@@ -243,7 +243,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.3k 字
+          2.4k 字
         
       </span>
     
@@ -399,7 +399,9 @@
 <p>网页看不见线索，于是先扫盘在抓包，抓包之后就回看见hint，提示你password&#x3D;ma5($pass.true)，上网查还真发现一个漏洞，漏洞原理我有点不知道。</p>
 <p>不过只要遇到了ma5($pass.true)，就注入这个字符串就可以了，<code>ffifdyop</code>，这个字符串会导致sql查询语句中，where后的条件为永真，所以可以执行查询，至于原理。。。。有点不懂</p>
 <p>这一步绕过去之后就是正常的md5弱比较强比较了，比较简单，0e绕过和数组绕过</p>
-
+<h1 id="ez-sql"><a href="#ez-sql" class="headerlink" title="ez_sql"></a>ez_sql</h1><p>双写绕过</p>
+<p>注入1发现可以正常回显</p>
+<h1 id="这是什么？注一下"><a href="#这是什么？注一下" class="headerlink" title="这是什么？注一下"></a>这是什么？注一下</h1>
                 
               </div>
             

